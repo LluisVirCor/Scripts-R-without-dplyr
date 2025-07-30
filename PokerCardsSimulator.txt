@@ -1,0 +1,2195 @@
+options(digits=4)
+
+##FUNCIÓN QUE DEVUELVE LAS POSIBLES REPETICIONES ENTRE CARTAS
+repeticiones=function(a,b,c,d,e,f,g){
+
+rep<-c(rep(0,7))
+numero<-c(a,b,c,d,e,f,g)
+
+rep1<-0
+numrep1<-0
+rep2<-0
+numrep2<-0
+
+for (ç in 1:7){
+if (numero[ç]==a){rep[ç]<-rep[ç]+1}
+if (numero[ç]==b){rep[ç]<-rep[ç]+1}
+if (numero[ç]==c){rep[ç]<-rep[ç]+1}
+if (numero[ç]==d){rep[ç]<-rep[ç]+1}
+if (numero[ç]==e){rep[ç]<-rep[ç]+1}
+if (numero[ç]==f){rep[ç]<-rep[ç]+1}
+if (numero[ç]==g){rep[ç]<-rep[ç]+1}
+}
+
+
+if(max(rep)>=2){
+
+
+for (ç in 1:7){
+if (rep[ç]==max(rep)){
+if (numero[ç]>numrep1){
+rep1<-rep[ç]
+numrep1<-numero[ç]
+}
+}
+}
+
+
+for (ç in 1:7){
+if (numero[ç]==numrep1){
+numero[ç]<-0
+rep[ç]<-1
+}
+}
+
+
+for (ç in 1:7){
+if (rep[ç]==max(rep)){
+if (numero[ç]>numrep2){
+rep2<-rep[ç]
+numrep2<-numero[ç]
+}
+}
+}
+
+
+}
+
+devolucion<-c(numrep1,rep1,numrep2,rep2)
+return(devolucion)
+
+}
+
+
+##FUNCIÓN QUE DEVUELVE EL COLOR QUE SE REPITE 5 VECES
+
+colores=function(h,i,j,k,l,m,n){
+coloresbis<-c(h,i,j,k,l,m,n)
+compt<-1
+contador<-0
+colorbis<-0
+
+while (compt<5){
+if (compt==coloresbis[1]){contador<-contador+1}
+if (compt==coloresbis[2]){contador<-contador+1}
+if (compt==coloresbis[3]){contador<-contador+1}
+if (compt==coloresbis[4]){contador<-contador+1}
+if (compt==coloresbis[5]){contador<-contador+1}
+if (compt==coloresbis[6]){contador<-contador+1}
+if (compt==coloresbis[7]){contador<-contador+1}
+
+if (contador>=5){
+colorbis<-compt
+compt<-5
+}
+
+if (contador<5){
+colorbis<-0
+contador<-0
+compt<-compt+1
+}
+}
+
+return(colorbis)
+}
+
+
+
+##FUNCIÓN QUE DEVUELVE LA POSIBLE ESCALERA QUE HAYA
+
+
+escaleras=function(a,b,c,d,e,f,g){
+escalerabis<-c(a,b,c,d,e,f,g)
+escalera<-c(-1,-1,-1,-1,-1)
+
+uno<-0
+dos<-0
+tres<-0
+cuatro<-0
+cinco<-0
+
+while(min(escalerabis)<100){
+uno<-min(escalerabis)
+for (ç in 1:7){
+if (escalerabis[ç]==uno+1){dos<-uno+1}
+if (escalerabis[ç]==uno+2){tres<-uno+2}
+if (escalerabis[ç]==uno+3){cuatro<-uno+3}
+if (escalerabis[ç]==uno+4){cinco<-uno+4}
+}
+
+escalerabis[which.min(escalerabis)]<-100
+
+if (uno>0&dos>0&tres>0&cuatro>0&cinco>0){
+escalera[1]<-uno
+escalera[2]<-dos
+escalera[3]<-tres
+escalera[4]<-cuatro
+escalera[5]<-cinco
+}
+
+uno<-0
+dos<-0
+tres<-0
+cuatro<-0
+cinco<-0
+}
+
+if (min(escalera)==-1){
+escalerabis<-c(a,b,c,d,e,f,g)
+
+for (d in 1:7){
+if (escalerabis[d]==14){uno<-14}
+if (escalerabis[d]==2){dos<-2}
+if (escalerabis[d]==3){tres<-3}
+if (escalerabis[d]==4){cuatro<-4}
+if (escalerabis[d]==5){cinco<-5}
+}
+
+if (uno==14&dos==2&tres==3&cuatro==4&cinco==5){
+escalera[1]<-uno
+escalera[2]<-dos
+escalera[3]<-tres
+escalera[4]<-cuatro
+escalera[5]<-cinco
+}
+}
+
+return(escalera)
+
+}
+
+##FUNCIÓN QUE DEVUELVE LA POSIBLE ESCALERA DE COLOR QUE HAYA
+
+escol=function(a,b,c,d,e,f,g,h,i,j,k,l,m,n){
+prou<-c(a,b,c,d,e,f,g,h,i,j,k,l,m,n)
+esco<-0
+kap<-0
+pas<-1
+
+while (pas>=1){
+eu<-escaleras(a,b,c,d,e,f,g)
+pas<-0
+if (min(escaleras(a,b,c,d,e,f,g))>0&colores(h,i,j,k,l,m,n)>0){
+
+for (rap in 1:5){
+for (v in 1:7){
+if (prou[v]==eu[rap]&prou[v+7]==colores(h,i,j,k,l,m,n)){kap<-kap+1}
+}
+}
+
+if (kap==5){esco<-eu[5]}
+if (kap<5){
+ryan<-max(escaleras(a,b,c,d,e,f,g))
+if (a==ryan){a<--1}
+if (b==ryan){b<--1}
+if (c==ryan){c<--1}
+if (d==ryan){d<--1}
+if (e==ryan){e<--1}
+if (f==ryan){f<--1}
+if (g==ryan){g<--1}
+pas<-1
+kap<-0
+}
+}
+}
+return(esco)
+}
+
+
+
+mano=function(a1,b1,c1,d1,e1,f1,g1){
+
+if (a1>20&a1<25){
+a<-2
+h<-a1-20
+}
+
+if (a1>30&a1<35){
+a<-3
+h<-a1-30
+}
+
+if (a1>40&a1<45){
+a<-4
+h<-a1-40
+}
+
+if (a1>50&a1<55){
+a<-5
+h<-a1-50
+}
+
+if (a1>60&a1<65){
+a<-6
+h<-a1-60
+}
+
+if (a1>70&a1<75){
+a<-7
+h<-a1-70
+}
+
+if (a1>80&a1<85){
+a<-8
+h<-a1-80
+}
+
+if (a1>90&a1<95){
+a<-9
+h<-a1-90
+}
+
+if (a1>100&a1<1055){
+a<-10
+h<-a1-100
+}
+
+if (a1>110&a1<115){
+a<-11
+h<-a1-110
+}
+
+if (a1>120&a1<125){
+a<-12
+h<-a1-120
+}
+
+if (a1>130&a1<135){
+a<-13
+h<-a1-130
+}
+
+if (a1>140&a1<145){
+a<-14
+h<-a1-140
+}
+
+
+if (b1>20&b1<25){
+b<-2
+i<-b1-20
+}
+
+if (b1>30&b1<35){
+b<-3
+i<-b1-30
+}
+
+if (b1>40&b1<45){
+b<-4
+i<-b1-40
+}
+
+if (b1>50&b1<55){
+b<-5
+i<-b1-50
+}
+
+if (b1>60&b1<65){
+b<-6
+i<-b1-60
+}
+
+if (b1>70&b1<75){
+b<-7
+i<-b1-70
+}
+
+if (b1>80&b1<85){
+b<-8
+i<-b1-80
+}
+
+if (b1>90&b1<95){
+b<-9
+i<-b1-90
+}
+
+if (b1>100&b1<1055){
+b<-10
+i<-b1-100
+}
+
+if (b1>110&b1<115){
+b<-11
+i<-b1-110
+}
+
+if (b1>120&b1<125){
+b<-12
+i<-b1-120
+}
+
+if (b1>130&b1<135){
+b<-13
+i<-b1-130
+}
+
+if (b1>140&b1<145){
+b<-14
+i<-b1-140
+}
+
+
+if (c1>20&c1<25){
+c<-2
+j<-c1-20
+}
+
+if (c1>30&c1<35){
+c<-3
+j<-c1-30
+}
+
+if (c1>40&c1<45){
+c<-4
+j<-c1-40
+}
+
+if (c1>50&c1<55){
+c<-5
+j<-c1-50
+}
+
+if (c1>60&c1<65){
+c<-6
+j<-c1-60
+}
+
+if (c1>70&c1<75){
+c<-7
+j<-c1-70
+}
+
+if (c1>80&c1<85){
+c<-8
+j<-c1-80
+}
+
+if (c1>90&c1<95){
+c<-9
+j<-c1-90
+}
+
+if (c1>100&c1<1055){
+c<-10
+j<-c1-100
+}
+
+if (c1>110&c1<115){
+c<-11
+j<-c1-110
+}
+
+if (c1>120&c1<125){
+c<-12
+j<-c1-120
+}
+
+if (c1>130&c1<135){
+c<-13
+j<-c1-130
+}
+
+if (c1>140&c1<145){
+c<-14
+j<-c1-140
+}
+
+
+if (d1>20&d1<25){
+d<-2
+k<-d1-20
+}
+
+if (d1>30&d1<35){
+d<-3
+k<-d1-30
+}
+
+if (d1>40&d1<45){
+d<-4
+k<-d1-40
+}
+
+if (d1>50&d1<55){
+d<-5
+k<-d1-50
+}
+
+if (d1>60&d1<65){
+d<-6
+k<-d1-60
+}
+
+if (d1>70&d1<75){
+d<-7
+k<-d1-70
+}
+
+if (d1>80&d1<85){
+d<-8
+k<-d1-80
+}
+
+if (d1>90&d1<95){
+d<-9
+k<-d1-90
+}
+
+if (d1>100&d1<1055){
+d<-10
+k<-d1-100
+}
+
+if (d1>110&d1<115){
+d<-11
+k<-d1-110
+}
+
+if (d1>120&d1<125){
+d<-12
+k<-d1-120
+}
+
+if (d1>130&d1<135){
+d<-13
+k<-d1-130
+}
+
+if (d1>140&d1<145){
+d<-14
+k<-d1-140
+}
+
+if (e1>20&e1<25){
+e<-2
+l<-e1-20
+}
+
+if (e1>30&e1<35){
+e<-3
+l<-e1-30
+}
+
+if (e1>40&e1<45){
+e<-4
+l<-e1-40
+}
+
+if (e1>50&e1<55){
+e<-5
+l<-e1-50
+}
+
+if (e1>60&e1<65){
+e<-6
+l<-e1-60
+}
+
+if (e1>70&e1<75){
+e<-7
+l<-e1-70
+}
+
+if (e1>80&e1<85){
+e<-8
+l<-e1-80
+}
+
+if (e1>90&e1<95){
+e<-9
+l<-e1-90
+}
+
+if (e1>100&e1<1055){
+e<-10
+l<-e1-100
+}
+
+if (e1>110&e1<115){
+e<-11
+l<-e1-110
+}
+
+if (e1>120&e1<125){
+e<-12
+l<-e1-120
+}
+
+if (e1>130&e1<135){
+e<-13
+l<-e1-130
+}
+
+if (e1>140&e1<145){
+e<-14
+l<-e1-140
+}
+
+if (f1==0){
+f<-0
+m<-0
+}
+
+if (f1>20&f1<25){
+f<-2
+m<-f1-20
+}
+
+if (f1>30&f1<35){
+f<-3
+m<-f1-30
+}
+
+if (f1>40&f1<45){
+f<-4
+m<-f1-40
+}
+
+if (f1>50&f1<55){
+f<-5
+m<-f1-50
+}
+
+if (f1>60&f1<65){
+f<-6
+m<-f1-60
+}
+
+if (f1>70&f1<75){
+f<-7
+m<-f1-70
+}
+
+if (f1>80&f1<85){
+f<-8
+m<-f1-80
+}
+
+if (f1>90&f1<95){
+f<-9
+m<-f1-90
+}
+
+if (f1>100&f1<1055){
+f<-10
+m<-f1-100
+}
+
+if (f1>110&f1<115){
+f<-11
+m<-f1-110
+}
+
+if (f1>120&f1<125){
+f<-12
+m<-f1-120
+}
+
+if (f1>130&f1<135){
+f<-13
+m<-f1-130
+}
+
+if (f1>140&f1<145){
+f<-14
+m<-f1-140
+}
+
+if (g1==0){
+g<-0
+n<-0
+}
+
+if (g1>20&g1<25){
+g<-2
+n<-g1-20
+}
+
+if (g1>30&g1<35){
+g<-3
+n<-g1-30
+}
+
+if (g1>40&g1<45){
+g<-4
+n<-g1-40
+}
+
+if (g1>50&g1<55){
+g<-5
+n<-g1-50
+}
+
+if (g1>60&g1<65){
+g<-6
+n<-g1-60
+}
+
+if (g1>70&g1<75){
+g<-7
+n<-g1-70
+}
+
+if (g1>80&g1<85){
+g<-8
+n<-g1-80
+}
+
+if (g1>90&g1<95){
+g<-9
+n<-g1-90
+}
+
+if (g1>100&g1<1055){
+g<-10
+n<-g1-100
+}
+
+if (g1>110&g1<115){
+g<-11
+n<-g1-110
+}
+
+if (g1>120&g1<125){
+g<-12
+n<-g1-120
+}
+
+if (g1>130&g1<135){
+g<-13
+n<-g1-130
+}
+
+if (g1>140&g1<145){
+g<-14
+n<-g1-140
+}
+
+
+
+
+nsim<-2000
+medias<-matrix(c(rep(0,345*(nsim))),ncol=nsim)
+mediasrival<-matrix(c(rep(0,345*(nsim))),ncol=nsim)
+vecmedias<-c(rep(0,345))
+vecmediasrival<-c(rep(0,345))
+victoria<-0
+empate<-0
+derrota<-0
+
+
+for (z in 1:nsim){
+probabilidades<-c(rep(0,345))
+probabilidadesrival<-c(rep(0,345))
+
+baraja<-matrix(c(rep(0,208)),ncol=4)
+baraja[,1]<-c(2,3,4,5,6,7,8,9,10,11,12,13,14,2,3,4,5,6,7,8,9,10,11,12,13,14,2,3,4,5,6,7,8,9,10,11,12,13,14,2,3,4,5,6,7,8,9,10,11,12,13,14)
+baraja[,2]<-c(1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4)
+baraja[,3]<-c(1,1,1,1,1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,100,100,100,100,100,100,100,100,100,100,100,100,100,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000)
+baraja[,4]<-baraja[,1]*baraja[,3]
+
+
+##SELECCIÓN DE CARTAS EN FUNCIÓN DE LA TIRADA Y DE SI ES RIVAL O NO
+
+
+if(f==0&g==0&m==0&n==0){
+
+fplus<-f
+gplus<-g
+mplus<-m
+nplus<-n
+
+for (y in 1:nrow(baraja)){
+if((baraja[y,1]==a&baraja[y,2]==h)|(baraja[y,1]==b&baraja[y,2]==i)|(baraja[y,1]==c&baraja[y,2]==j)|(baraja[y,1]==d&baraja[y,2]==k)|(baraja[y,1]==e&baraja[y,2]==l)){baraja[y,]<-NA}
+}
+baraja<-na.omit(baraja)
+
+urna<-sample(baraja[,4],4,replace=F)
+
+if (2<=urna[1]&urna[1]<=14){
+fplus<-urna[1]
+mplus<-1
+}
+
+if (20<=urna[1]&urna[1]<=140){
+fplus<-urna[1]/10
+mplus<-2
+}
+
+if (200<=urna[1]&urna[1]<=1400){
+fplus<-urna[1]/100
+mplus<-3
+}
+
+if (2000<=urna[1]&urna[1]<=14000){
+fplus<-urna[1]/1000
+mplus<-4
+}
+
+if (2<=urna[2]&urna[2]<=14){
+gplus<-urna[2]
+nplus<-1
+}
+
+if (20<=urna[2]&urna[2]<=140){
+gplus<-urna[2]/10
+nplus<-2
+}
+
+if (200<=urna[2]&urna[2]<=1400){
+gplus<-urna[2]/100
+nplus<-3
+}
+
+if (2000<=urna[2]&urna[2]<=14000){
+gplus<-urna[2]/1000
+nplus<-4
+}
+
+
+if (2<=urna[3]&urna[3]<=14){
+arival<-urna[3]
+hrival<-1
+}
+
+if (20<=urna[3]&urna[3]<=140){
+arival<-urna[3]/10
+hrival<-2
+}
+
+if (200<=urna[3]&urna[3]<=1400){
+arival<-urna[3]/100
+hrival<-3
+}
+
+if (2000<=urna[3]&urna[3]<=14000){
+arival<-urna[3]/1000
+hrival<-4
+}
+
+if (2<=urna[4]&urna[4]<=14){
+brival<-urna[4]
+irival<-1
+}
+
+if (20<=urna[4]&urna[4]<=140){
+brival<-urna[4]/10
+irival<-2
+}
+
+if (200<=urna[4]&urna[4]<=1400){
+brival<-urna[4]/100
+irival<-3
+}
+
+if (2000<=urna[4]&urna[4]<=14000){
+brival<-urna[4]/1000
+irival<-4
+}
+}
+
+
+
+
+if(f!=0&g==0&m!=0&n==0){
+
+fplus<-f
+gplus<-g
+mplus<-m
+nplus<-n
+
+for (y in 1:nrow(baraja)){
+if((baraja[y,1]==a&baraja[y,2]==h)|(baraja[y,1]==b&baraja[y,2]==i)|(baraja[y,1]==c&baraja[y,2]==j)|(baraja[y,1]==d&baraja[y,2]==k)|(baraja[y,1]==e&baraja[y,2]==l)|(baraja[y,1]==f&baraja[y,2]==m)){baraja[y,]<-NA}
+}
+baraja<-na.omit(baraja)
+
+urna<-sample(baraja[,4],3,replace=F)
+
+if (2<=urna[1]&urna[1]<=14){
+gplus<-urna[1]
+nplus<-1
+}
+
+if (20<=urna[1]&urna[1]<=140){
+gplus<-urna[1]/10
+nplus<-2
+}
+
+if (200<=urna[1]&urna[1]<=1400){
+gplus<-urna[1]/100
+nplus<-3
+}
+
+if (2000<=urna[1]&urna[1]<=14000){
+gplus<-urna[1]/1000
+nplus<-4
+}
+
+if (2<=urna[2]&urna[2]<=14){
+arival<-urna[2]
+hrival<-1
+}
+
+if (20<=urna[2]&urna[2]<=140){
+arival<-urna[2]/10
+hrival<-2
+}
+
+if (200<=urna[2]&urna[2]<=1400){
+arival<-urna[2]/100
+hrival<-3
+}
+
+if (2000<=urna[2]&urna[2]<=14000){
+arival<-urna[2]/1000
+hrival<-4
+}
+
+if (2<=urna[3]&urna[3]<=14){
+brival<-urna[3]
+irival<-1
+}
+
+if (20<=urna[3]&urna[3]<=140){
+brival<-urna[3]/10
+irival<-2
+}
+
+if (200<=urna[3]&urna[3]<=1400){
+brival<-urna[3]/100
+irival<-3
+}
+
+if (2000<=urna[3]&urna[3]<=14000){
+brival<-urna[3]/1000
+irival<-4
+}
+}
+
+
+
+
+if (g!=0&n!=0){
+
+fplus<-f
+gplus<-g
+mplus<-m
+nplus<-n
+
+for (y in 1:nrow(baraja)){
+if((baraja[y,1]==a&baraja[y,2]==h)|(baraja[y,1]==b&baraja[y,2]==i)|(baraja[y,1]==c&baraja[y,2]==j)|(baraja[y,1]==d&baraja[y,2]==k)|(baraja[y,1]==e&baraja[y,2]==l)|(baraja[y,1]==f&baraja[y,2]==m)|(baraja[y,1]==g&baraja[y,2]==n)){baraja[y,]<-NA}
+}
+baraja<-na.omit(baraja)
+
+urna<-sample(baraja[,4],2,replace=F)
+
+
+if (2<=urna[1]&urna[1]<=14){
+arival<-urna[1]
+hrival<-1
+}
+
+if (20<=urna[1]&urna[1]<=140){
+arival<-urna[1]/10
+hrival<-2
+}
+
+if (200<=urna[1]&urna[1]<=1400){
+arival<-urna[1]/100
+hrival<-3
+}
+
+if (2000<=urna[1]&urna[1]<=14000){
+arival<-urna[1]/1000
+hrival<-4
+}
+
+if (2<=urna[2]&urna[2]<=14){
+brival<-urna[2]
+irival<-1
+}
+
+if (20<=urna[2]&urna[2]<=140){
+brival<-urna[2]/10
+irival<-2
+}
+
+if (200<=urna[2]&urna[2]<=1400){
+brival<-urna[2]/100
+irival<-3
+}
+
+if (2000<=urna[2]&urna[2]<=14000){
+brival<-urna[2]/1000
+irival<-4
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+repeticionescte<-repeticiones(-4,-1,c,d,e,fplus,gplus)
+colorescte<-colores(-1,-1,j,k,l,mplus,nplus)
+repeticionesrival<-repeticiones(arival,brival,c,d,e,fplus,gplus)
+coloresrival<-colores(hrival,irival,j,k,l,mplus,nplus)
+escalerasrival<-escaleras(arival,brival,c,d,e,fplus,gplus)
+manobisrival<-c(arival,brival,c,d,e,fplus,gplus,hrival,irival,j,k,l,mplus,nplus)
+repeticiones<-repeticiones(a,b,c,d,e,fplus,gplus)
+colores<-colores(h,i,j,k,l,mplus,nplus)
+escaleras<-escaleras(a,b,c,d,e,fplus,gplus)
+manobis<-c(a,b,c,d,e,fplus,gplus,h,i,j,k,l,mplus,nplus)
+escolrival<-escol(arival,brival,c,d,e,fplus,gplus,hrival,irival,j,k,l,mplus,nplus)
+escol<-escol(a,b,c,d,e,fplus,gplus,h,i,j,k,l,mplus,nplus)
+
+
+##ESCALERA COLOR
+
+if (escol>0){
+
+if (escol==14){probabilidades[1]<-1}
+
+if (escol==13){probabilidades[2]<-1}
+
+if (escol==12){probabilidades[3]<-1}
+
+if (escol==11){probabilidades[4]<-1}
+
+if (escol==10){probabilidades[5]<-1}
+
+if (escol==9){probabilidades[6]<-1}
+
+if (escol==8){probabilidades[7]<-1}
+
+if (escol==7){probabilidades[8]<-1}
+
+if (escol==6){probabilidades[9]<-1}
+
+if (escol==5){probabilidades[10]<-1}
+
+}
+
+
+##ESCALERA COLOR(RIVAL)
+
+if (escolrival>0){
+
+if (escolrival==14){probabilidadesrival[1]<-1}
+
+if (escolrival==13){probabilidadesrival[2]<-1}
+
+if (escolrival==12){probabilidadesrival[3]<-1}
+
+if (escolrival==11){probabilidadesrival[4]<-1}
+
+if (escolrival==10){probabilidadesrival[5]<-1}
+
+if (escolrival==9){probabilidadesrival[6]<-1}
+
+if (escolrival==8){probabilidadesrival[7]<-1}
+
+if (escolrival==7){probabilidadesrival[8]<-1}
+
+if (escolrival==6){probabilidadesrival[9]<-1}
+
+if (escolrival==5){probabilidadesrival[10]<-1}
+
+}
+
+
+##POKER
+
+if (repeticiones[2]==4&max(probabilidades[1:10])==0){
+if (repeticiones[1]==14){probabilidades[11]<-1}
+if (repeticiones[1]==13){probabilidades[12]<-1}
+if (repeticiones[1]==12){probabilidades[13]<-1}
+if (repeticiones[1]==11){probabilidades[14]<-1}
+if (repeticiones[1]==10){probabilidades[15]<-1}
+if (repeticiones[1]==9){probabilidades[16]<-1}
+if (repeticiones[1]==8){probabilidades[17]<-1}
+if (repeticiones[1]==7){probabilidades[18]<-1}
+if (repeticiones[1]==6){probabilidades[19]<-1}
+if (repeticiones[1]==5){probabilidades[20]<-1}
+if (repeticiones[1]==4){probabilidades[21]<-1}
+if (repeticiones[1]==3){probabilidades[22]<-1}
+if (repeticiones[1]==2){probabilidades[23]<-1}
+}
+
+
+
+##POKER(RIVAL)
+
+if (repeticionesrival[2]==4&max(probabilidadesrival[1:10])==0){
+if (repeticionesrival[1]==14){probabilidadesrival[11]<-1}
+if (repeticionesrival[1]==13){probabilidadesrival[12]<-1}
+if (repeticionesrival[1]==12){probabilidadesrival[13]<-1}
+if (repeticionesrival[1]==11){probabilidadesrival[14]<-1}
+if (repeticionesrival[1]==10){probabilidadesrival[15]<-1}
+if (repeticionesrival[1]==9){probabilidadesrival[16]<-1}
+if (repeticionesrival[1]==8){probabilidadesrival[17]<-1}
+if (repeticionesrival[1]==7){probabilidadesrival[18]<-1}
+if (repeticionesrival[1]==6){probabilidadesrival[19]<-1}
+if (repeticionesrival[1]==5){probabilidadesrival[20]<-1}
+if (repeticionesrival[1]==4){probabilidadesrival[21]<-1}
+if (repeticionesrival[1]==3){probabilidadesrival[22]<-1}
+if (repeticionesrival[1]==2){probabilidadesrival[23]<-1}
+}
+
+
+
+##FULL
+
+if (repeticiones[2]==3&(repeticiones[4]==2|repeticiones[4]==3)&max(probabilidades[1:23])==0){
+if (repeticiones[1]==14){probabilidades[24]<-1}
+if (repeticiones[1]==13){probabilidades[25]<-1}
+if (repeticiones[1]==12){probabilidades[26]<-1}
+if (repeticiones[1]==11){probabilidades[27]<-1}
+if (repeticiones[1]==10){probabilidades[28]<-1}
+if (repeticiones[1]==9){probabilidades[29]<-1}
+if (repeticiones[1]==8){probabilidades[30]<-1}
+if (repeticiones[1]==7){probabilidades[31]<-1}
+if (repeticiones[1]==6){probabilidades[32]<-1}
+if (repeticiones[1]==5){probabilidades[33]<-1}
+if (repeticiones[1]==4){probabilidades[34]<-1}
+if (repeticiones[1]==3){probabilidades[35]<-1}
+if (repeticiones[1]==2){probabilidades[36]<-1}
+}
+
+
+
+
+##FULL(RIVAL)
+
+if (repeticionesrival[2]==3&(repeticionesrival[4]==2|repeticionesrival[4]==3)&max(probabilidadesrival[1:23])==0){
+if (repeticionesrival[1]==14){probabilidadesrival[24]<-1}
+if (repeticionesrival[1]==13){probabilidadesrival[25]<-1}
+if (repeticionesrival[1]==12){probabilidadesrival[26]<-1}
+if (repeticionesrival[1]==11){probabilidadesrival[27]<-1}
+if (repeticionesrival[1]==10){probabilidadesrival[28]<-1}
+if (repeticionesrival[1]==9){probabilidadesrival[29]<-1}
+if (repeticionesrival[1]==8){probabilidadesrival[30]<-1}
+if (repeticionesrival[1]==7){probabilidadesrival[31]<-1}
+if (repeticionesrival[1]==6){probabilidadesrival[32]<-1}
+if (repeticionesrival[1]==5){probabilidadesrival[33]<-1}
+if (repeticionesrival[1]==4){probabilidadesrival[34]<-1}
+if (repeticionesrival[1]==3){probabilidadesrival[35]<-1}
+if (repeticionesrival[1]==2){probabilidadesrival[36]<-1}
+}
+
+
+
+##COLOR
+
+if(colores>0&max(probabilidades[1:36])==0){
+
+if (colorescte>0&manobis[8]!=colores&manobis[9]!=colores){
+	probabilidades[44]<-1
+}
+
+
+
+if(colorescte==0|((colorescte>0&manobis[8]==colores)|(colorescte>0&manobis[9]==colores))){
+
+verificador<-'falso'
+maunobis<-manobis[1:2]
+mauunobis<-manobis[8:9]
+posici<-0
+
+while(verificador!='cierto'){
+	posici<-which.max(maunobis)
+	if (mauunobis[posici]==colores){
+					verificador<-'cierto'
+					}
+	else{
+		maunobis[posici]<-0
+		}
+}
+
+if(max(manobis[posici])==14){probabilidades[37]<-1}
+
+if(max(manobis[posici])==13){probabilidades[38]<-1}
+
+if(max(manobis[posici])==12){probabilidades[39]<-1}
+
+if(max(manobis[posici])==11){probabilidades[40]<-1}
+
+if(max(manobis[posici])==10){probabilidades[41]<-1}
+
+if(max(manobis[posici])==9){probabilidades[42]<-1}
+
+if(max(manobis[posici])==8){probabilidades[43]<-1}
+
+if(max(manobis[posici])==7){probabilidades[44]<-1}
+
+if(max(manobis[posici])==6){probabilidades[45]<-1}
+
+if(max(manobis[posici])==5){probabilidades[46]<-1}
+
+if(max(manobis[posici])==4){probabilidades[47]<-1}
+
+if(max(manobis[posici])==3){probabilidades[48]<-1}
+
+if(max(manobis[posici])==2){probabilidades[49]<-1}
+}
+}
+
+
+
+##COLOR(RIVAL)
+
+if(coloresrival>0&max(probabilidadesrival[1:36])==0){
+
+if (colorescte>0&manobisrival[8]!=coloresrival&manobisrival[9]!=coloresrival){
+	probabilidadesrival[44]<-1
+}
+
+
+
+if(colorescte==0|((colorescte>0&manobisrival[8]==coloresrival)|(colorescte>0&manobisrival[9]==coloresrival))){
+
+verificador<-'falso'
+maunobis<-manobisrival[1:2]
+mauunobis<-manobisrival[8:9]
+posici<-0
+
+while(verificador!='cierto'){
+	posici<-which.max(maunobis)
+	if (mauunobis[posici]==coloresrival){
+					verificador<-'cierto'
+					}
+	else{
+		maunobis[posici]<-0
+		}
+}
+
+if(max(manobisrival[posici])==14){probabilidadesrival[37]<-1}
+
+if(max(manobisrival[posici])==13){probabilidadesrival[38]<-1}
+
+if(max(manobisrival[posici])==12){probabilidadesrival[39]<-1}
+
+if(max(manobisrival[posici])==11){probabilidadesrival[40]<-1}
+
+if(max(manobisrival[posici])==10){probabilidadesrival[41]<-1}
+
+if(max(manobisrival[posici])==9){probabilidadesrival[42]<-1}
+
+if(max(manobisrival[posici])==8){probabilidadesrival[43]<-1}
+
+if(max(manobisrival[posici])==7){probabilidadesrival[44]<-1}
+
+if(max(manobisrival[posici])==6){probabilidadesrival[45]<-1}
+
+if(max(manobisrival[posici])==5){probabilidadesrival[46]<-1}
+
+if(max(manobisrival[posici])==4){probabilidadesrival[47]<-1}
+
+if(max(manobisrival[posici])==3){probabilidadesrival[48]<-1}
+
+if(max(manobisrival[posici])==2){probabilidadesrival[49]<-1}
+
+}
+}
+
+
+
+##ESCALERA
+
+if (max(escaleras)>0&max(probabilidades[1:49])==0){
+
+if (max(escaleras)==14&min(escaleras)!=2){probabilidades[50]<-1}
+if (max(escaleras)==13){probabilidades[51]<-1}
+if (max(escaleras)==12){probabilidades[52]<-1}
+if (max(escaleras)==11){probabilidades[53]<-1}
+if (max(escaleras)==10){probabilidades[54]<-1}
+if (max(escaleras)==9){probabilidades[55]<-1}
+if (max(escaleras)==8){probabilidades[56]<-1}
+if (max(escaleras)==7){probabilidades[57]<-1}
+if (max(escaleras)==6){probabilidades[58]<-1}
+if (max(escaleras)==14&min(escaleras)==2){probabilidades[59]<-1}
+}
+
+
+
+##ESCALERA(RIVAL)
+
+if (max(escalerasrival)>0&max(probabilidadesrival[1:49])==0){
+
+if (max(escalerasrival)==14&min(escalerasrival)!=2){probabilidadesrival[50]<-1}
+if (max(escalerasrival)==13){probabilidadesrival[51]<-1}
+if (max(escalerasrival)==12){probabilidadesrival[52]<-1}
+if (max(escalerasrival)==11){probabilidadesrival[53]<-1}
+if (max(escalerasrival)==10){probabilidadesrival[54]<-1}
+if (max(escalerasrival)==9){probabilidadesrival[55]<-1}
+if (max(escalerasrival)==8){probabilidadesrival[56]<-1}
+if (max(escalerasrival)==7){probabilidadesrival[57]<-1}
+if (max(escalerasrival)==6){probabilidadesrival[58]<-1}
+if (max(escalerasrival)==14&min(escalerasrival)==2){probabilidadesrival[59]<-1}
+}
+
+
+
+
+##TRÍO
+
+
+if (repeticiones[2]==3&max(probabilidades[1:59])==0){
+
+if (repeticiones[1]==14){probabilidades[60]<-1}
+if (repeticiones[1]==13){probabilidades[61]<-1}
+if (repeticiones[1]==12){probabilidades[62]<-1}
+if (repeticiones[1]==11){probabilidades[63]<-1}
+if (repeticiones[1]==10){probabilidades[64]<-1}
+if (repeticiones[1]==9){probabilidades[65]<-1}
+if (repeticiones[1]==8){probabilidades[66]<-1}
+if (repeticiones[1]==7){probabilidades[67]<-1}
+if (repeticiones[1]==6){probabilidades[68]<-1}
+if (repeticiones[1]==5){probabilidades[69]<-1}
+if (repeticiones[1]==4){probabilidades[70]<-1}
+if (repeticiones[1]==3){probabilidades[71]<-1}
+if (repeticiones[1]==2){probabilidades[72]<-1}
+}
+
+
+
+##TRÍO(RIVAL)
+
+
+if (repeticionesrival[2]==3&max(probabilidadesrival[1:59])==0){
+
+if (repeticionesrival[1]==14){probabilidadesrival[60]<-1}
+if (repeticionesrival[1]==13){probabilidadesrival[61]<-1}
+if (repeticionesrival[1]==12){probabilidadesrival[62]<-1}
+if (repeticionesrival[1]==11){probabilidadesrival[63]<-1}
+if (repeticionesrival[1]==10){probabilidadesrival[64]<-1}
+if (repeticionesrival[1]==9){probabilidadesrival[65]<-1}
+if (repeticionesrival[1]==8){probabilidadesrival[66]<-1}
+if (repeticionesrival[1]==7){probabilidadesrival[67]<-1}
+if (repeticionesrival[1]==6){probabilidadesrival[68]<-1}
+if (repeticionesrival[1]==5){probabilidadesrival[69]<-1}
+if (repeticionesrival[1]==4){probabilidadesrival[70]<-1}
+if (repeticionesrival[1]==3){probabilidadesrival[71]<-1}
+if (repeticionesrival[1]==2){probabilidadesrival[72]<-1}
+}
+
+
+
+##DOBLE PAREJA
+
+
+if (repeticiones[2]==2&repeticiones[4]==2&max(probabilidades[1:72])==0){
+
+if ((repeticionescte[2]==2&repeticionescte[4]==2)&(repeticiones[1]==repeticionescte[1]&repeticiones[3]==repeticionescte[3])){
+
+posic<-0
+maunobis<-manobis[1:7]
+for (ç in 1:7){
+	if(maunobis[ç]==repeticiones[1]|maunobis[ç]==repeticiones[3]){
+		maunobis[ç]<-0
+	}
+}
+posic<-which.max(maunobis)
+
+	if (manobis[posic]==14){probabilidades[151]<-1}
+	if (manobis[posic]==13){probabilidades[152]<-1}
+	if (manobis[posic]==12){probabilidades[153]<-1}
+	if (manobis[posic]==11){probabilidades[154]<-1}
+	if (manobis[posic]==10){probabilidades[155]<-1}
+	if (manobis[posic]==9){probabilidades[156]<-1}
+	if (manobis[posic]==8){probabilidades[157]<-1}
+	if (manobis[posic]==7){probabilidades[158]<-1}
+	if (manobis[posic]==6){probabilidades[159]<-1}
+	if (manobis[posic]==5){probabilidades[160]<-1}
+	if (manobis[posic]==4){probabilidades[161]<-1}
+	if (manobis[posic]==3){probabilidades[162]<-1}
+	if (manobis[posic]==2){probabilidades[163]<-1}
+}
+else{
+
+if (repeticiones[1]==14){
+	if (repeticiones[3]==13){probabilidades[73]<-1}
+	if (repeticiones[3]==12){probabilidades[74]<-1}
+	if (repeticiones[3]==11){probabilidades[75]<-1}
+	if (repeticiones[3]==10){probabilidades[76]<-1}
+	if (repeticiones[3]==9){probabilidades[77]<-1}
+	if (repeticiones[3]==8){probabilidades[78]<-1}
+	if (repeticiones[3]==7){probabilidades[79]<-1}
+	if (repeticiones[3]==6){probabilidades[80]<-1}
+	if (repeticiones[3]==5){probabilidades[81]<-1}
+	if (repeticiones[3]==4){probabilidades[82]<-1}
+	if (repeticiones[3]==3){probabilidades[83]<-1}
+	if (repeticiones[3]==2){probabilidades[84]<-1}
+}
+
+if (repeticiones[1]==13){
+	if (repeticiones[3]==12){probabilidades[85]<-1}
+	if (repeticiones[3]==11){probabilidades[86]<-1}
+	if (repeticiones[3]==10){probabilidades[87]<-1}
+	if (repeticiones[3]==9){probabilidades[88]<-1}
+	if (repeticiones[3]==8){probabilidades[89]<-1}
+	if (repeticiones[3]==7){probabilidades[90]<-1}
+	if (repeticiones[3]==6){probabilidades[91]<-1}
+	if (repeticiones[3]==5){probabilidades[92]<-1}
+	if (repeticiones[3]==4){probabilidades[93]<-1}
+	if (repeticiones[3]==3){probabilidades[94]<-1}
+	if (repeticiones[3]==2){probabilidades[95]<-1}
+}
+if (repeticiones[1]==12){
+	if (repeticiones[3]==11){probabilidades[96]<-1}
+	if (repeticiones[3]==10){probabilidades[97]<-1}
+	if (repeticiones[3]==9){probabilidades[98]<-1}
+	if (repeticiones[3]==8){probabilidades[99]<-1}
+	if (repeticiones[3]==7){probabilidades[100]<-1}
+	if (repeticiones[3]==6){probabilidades[101]<-1}
+	if (repeticiones[3]==5){probabilidades[102]<-1}
+	if (repeticiones[3]==4){probabilidades[103]<-1}
+	if (repeticiones[3]==3){probabilidades[104]<-1}
+	if (repeticiones[3]==2){probabilidades[105]<-1}
+
+}
+if (repeticiones[1]==11){
+	if (repeticiones[3]==10){probabilidades[106]<-1}
+	if (repeticiones[3]==9){probabilidades[107]<-1}
+	if (repeticiones[3]==8){probabilidades[108]<-1}
+	if (repeticiones[3]==7){probabilidades[109]<-1}
+	if (repeticiones[3]==6){probabilidades[110]<-1}
+	if (repeticiones[3]==5){probabilidades[111]<-1}
+	if (repeticiones[3]==4){probabilidades[112]<-1}
+	if (repeticiones[3]==3){probabilidades[113]<-1}
+	if (repeticiones[3]==2){probabilidades[114]<-1}
+
+}
+if (repeticiones[1]==10){
+	if (repeticiones[3]==9){probabilidades[115]<-1}
+	if (repeticiones[3]==8){probabilidades[116]<-1}
+	if (repeticiones[3]==7){probabilidades[117]<-1}
+	if (repeticiones[3]==6){probabilidades[118]<-1}
+	if (repeticiones[3]==5){probabilidades[119]<-1}
+	if (repeticiones[3]==4){probabilidades[120]<-1}
+	if (repeticiones[3]==3){probabilidades[121]<-1}
+	if (repeticiones[3]==2){probabilidades[122]<-1}
+}
+if (repeticiones[1]==9){
+	if (repeticiones[3]==8){probabilidades[123]<-1}
+	if (repeticiones[3]==7){probabilidades[124]<-1}
+	if (repeticiones[3]==6){probabilidades[125]<-1}
+	if (repeticiones[3]==5){probabilidades[126]<-1}
+	if (repeticiones[3]==4){probabilidades[127]<-1}
+	if (repeticiones[3]==3){probabilidades[128]<-1}
+	if (repeticiones[3]==2){probabilidades[129]<-1}
+}
+if (repeticiones[1]==8){
+	if (repeticiones[3]==7){probabilidades[130]<-1}
+	if (repeticiones[3]==6){probabilidades[131]<-1}
+	if (repeticiones[3]==5){probabilidades[132]<-1}
+	if (repeticiones[3]==4){probabilidades[133]<-1}
+	if (repeticiones[3]==3){probabilidades[134]<-1}
+	if (repeticiones[3]==2){probabilidades[135]<-1}
+}
+if (repeticiones[1]==7){
+	if (repeticiones[3]==6){probabilidades[136]<-1}
+	if (repeticiones[3]==5){probabilidades[137]<-1}
+	if (repeticiones[3]==4){probabilidades[138]<-1}
+	if (repeticiones[3]==3){probabilidades[139]<-1}
+	if (repeticiones[3]==2){probabilidades[140]<-1}
+}
+if (repeticiones[1]==6){
+	if (repeticiones[3]==5){probabilidades[141]<-1}
+	if (repeticiones[3]==4){probabilidades[142]<-1}
+	if (repeticiones[3]==3){probabilidades[143]<-1}
+	if (repeticiones[3]==2){probabilidades[144]<-1}
+}
+if (repeticiones[1]==5){
+	if (repeticiones[3]==4){probabilidades[145]<-1}
+	if (repeticiones[3]==3){probabilidades[146]<-1}
+	if (repeticiones[3]==2){probabilidades[147]<-1}
+}
+if (repeticiones[1]==4){
+	if (repeticiones[3]==3){probabilidades[148]<-1}
+	if (repeticiones[3]==2){probabilidades[149]<-1}
+}
+if (repeticiones[1]==3){
+	if (repeticiones[3]==2){probabilidades[150]<-1}
+}
+}
+
+}
+
+
+
+
+##DOBLE PAREJA(RIVAL)
+
+
+if (repeticionesrival[2]==2&repeticionesrival[4]==2&max(probabilidadesrival[1:72])==0){
+
+if ((repeticionescte[2]==2&repeticionescte[4]==2)&(repeticionesrival[1]==repeticionescte[1]&repeticionesrival[3]==repeticionescte[3])){
+
+posic<-0
+maunobis<-manobisrival[1:7]
+for (ç in 1:7){
+	if(maunobis[ç]==repeticionesrival[1]|maunobis[ç]==repeticionesrival[3]){
+		maunobis[ç]<-0
+	}
+}
+posic<-which.max(maunobis)
+
+	if (manobisrival[posic]==14){probabilidadesrival[151]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[152]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[153]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[154]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[155]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[156]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[157]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[158]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[159]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[160]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[161]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[162]<-1}
+	if (manobisrival[posic]==2){probabilidadesrival[163]<-1}
+}
+else{
+
+if (repeticionesrival[1]==14){
+	if (repeticionesrival[3]==13){probabilidadesrival[73]<-1}
+	if (repeticionesrival[3]==12){probabilidadesrival[74]<-1}
+	if (repeticionesrival[3]==11){probabilidadesrival[75]<-1}
+	if (repeticionesrival[3]==10){probabilidadesrival[76]<-1}
+	if (repeticionesrival[3]==9){probabilidadesrival[77]<-1}
+	if (repeticionesrival[3]==8){probabilidadesrival[78]<-1}
+	if (repeticionesrival[3]==7){probabilidadesrival[79]<-1}
+	if (repeticionesrival[3]==6){probabilidadesrival[80]<-1}
+	if (repeticionesrival[3]==5){probabilidadesrival[81]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[82]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[83]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[84]<-1}
+}
+
+if (repeticionesrival[1]==13){
+	if (repeticionesrival[3]==12){probabilidadesrival[85]<-1}
+	if (repeticionesrival[3]==11){probabilidadesrival[86]<-1}
+	if (repeticionesrival[3]==10){probabilidadesrival[87]<-1}
+	if (repeticionesrival[3]==9){probabilidadesrival[88]<-1}
+	if (repeticionesrival[3]==8){probabilidadesrival[89]<-1}
+	if (repeticionesrival[3]==7){probabilidadesrival[90]<-1}
+	if (repeticionesrival[3]==6){probabilidadesrival[91]<-1}
+	if (repeticionesrival[3]==5){probabilidadesrival[92]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[93]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[94]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[95]<-1}
+}
+if (repeticionesrival[1]==12){
+	if (repeticionesrival[3]==11){probabilidadesrival[96]<-1}
+	if (repeticionesrival[3]==10){probabilidadesrival[97]<-1}
+	if (repeticionesrival[3]==9){probabilidadesrival[98]<-1}
+	if (repeticionesrival[3]==8){probabilidadesrival[99]<-1}
+	if (repeticionesrival[3]==7){probabilidadesrival[100]<-1}
+	if (repeticionesrival[3]==6){probabilidadesrival[101]<-1}
+	if (repeticionesrival[3]==5){probabilidadesrival[102]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[103]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[104]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[105]<-1}
+
+}
+if (repeticionesrival[1]==11){
+	if (repeticionesrival[3]==10){probabilidadesrival[106]<-1}
+	if (repeticionesrival[3]==9){probabilidadesrival[107]<-1}
+	if (repeticionesrival[3]==8){probabilidadesrival[108]<-1}
+	if (repeticionesrival[3]==7){probabilidadesrival[109]<-1}
+	if (repeticionesrival[3]==6){probabilidadesrival[110]<-1}
+	if (repeticionesrival[3]==5){probabilidadesrival[111]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[112]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[113]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[114]<-1}
+
+}
+if (repeticionesrival[1]==10){
+	if (repeticionesrival[3]==9){probabilidadesrival[115]<-1}
+	if (repeticionesrival[3]==8){probabilidadesrival[116]<-1}
+	if (repeticionesrival[3]==7){probabilidadesrival[117]<-1}
+	if (repeticionesrival[3]==6){probabilidadesrival[118]<-1}
+	if (repeticionesrival[3]==5){probabilidadesrival[119]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[120]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[121]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[122]<-1}
+}
+if (repeticionesrival[1]==9){
+	if (repeticionesrival[3]==8){probabilidadesrival[123]<-1}
+	if (repeticionesrival[3]==7){probabilidadesrival[124]<-1}
+	if (repeticionesrival[3]==6){probabilidadesrival[125]<-1}
+	if (repeticionesrival[3]==5){probabilidadesrival[126]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[127]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[128]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[129]<-1}
+}
+if (repeticionesrival[1]==8){
+	if (repeticionesrival[3]==7){probabilidadesrival[130]<-1}
+	if (repeticionesrival[3]==6){probabilidadesrival[131]<-1}
+	if (repeticionesrival[3]==5){probabilidadesrival[132]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[133]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[134]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[135]<-1}
+}
+if (repeticionesrival[1]==7){
+	if (repeticionesrival[3]==6){probabilidadesrival[136]<-1}
+	if (repeticionesrival[3]==5){probabilidadesrival[137]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[138]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[139]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[140]<-1}
+}
+if (repeticionesrival[1]==6){
+	if (repeticionesrival[3]==5){probabilidadesrival[141]<-1}
+	if (repeticionesrival[3]==4){probabilidadesrival[142]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[143]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[144]<-1}
+}
+if (repeticionesrival[1]==5){
+	if (repeticionesrival[3]==4){probabilidadesrival[145]<-1}
+	if (repeticionesrival[3]==3){probabilidadesrival[146]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[147]<-1}
+}
+if (repeticionesrival[1]==4){
+	if (repeticionesrival[3]==3){probabilidadesrival[148]<-1}
+	if (repeticionesrival[3]==2){probabilidadesrival[149]<-1}
+}
+if (repeticionesrival[1]==3){
+	if (repeticionesrival[3]==2){probabilidadesrival[150]<-1}
+}
+}
+
+}
+
+
+
+##PAREJA
+
+if (repeticiones[2]==2&max(probabilidades[1:163])==0){
+
+posic<-0
+incluido<-"falso"
+caunt<-1
+maunobis<-manobis[1:7]
+for (ç in 1:7){
+	if(maunobis[ç]==repeticiones[1]){
+		maunobis[ç]<-0
+	}
+}
+posic<-which.max(maunobis)
+
+while(caunt<=3){
+	posic<-which.max(maunobis)
+	if (posic==1|posic==2){
+	incluido<-"cierto"
+	caunt<-10
+	}
+	else{
+	maunobis[posic]<-0
+	caunt<-caunt+1
+	}
+}
+
+
+if (repeticionescte[1]==repeticiones[1]&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[320]<-1}
+	if (manobis[posic]==13){probabilidades[321]<-1}
+	if (manobis[posic]==12){probabilidades[322]<-1}
+	if (manobis[posic]==11){probabilidades[323]<-1}
+	if (manobis[posic]==10){probabilidades[324]<-1}
+	if (manobis[posic]==9){probabilidades[325]<-1}
+	if (manobis[posic]==8){probabilidades[326]<-1}
+	if (manobis[posic]==7){probabilidades[327]<-1}
+	if (manobis[posic]==6){probabilidades[328]<-1}
+	if (manobis[posic]==5){probabilidades[329]<-1}
+	if (manobis[posic]==4){probabilidades[330]<-1}
+	if (manobis[posic]==3){probabilidades[331]<-1}
+}
+	if (repeticionescte[1]==repeticiones[1]&incluido=="falso"){probabilidades[332]<-1}
+
+
+if (repeticiones[1]>repeticionescte[1]){
+
+
+
+if (repeticiones[1]==14&incluido=="cierto"){
+	if (manobis[posic]==13){probabilidades[164]<-1}
+	if (manobis[posic]==12){probabilidades[165]<-1}
+	if (manobis[posic]==11){probabilidades[166]<-1}
+	if (manobis[posic]==10){probabilidades[167]<-1}
+	if (manobis[posic]==9){probabilidades[168]<-1}
+	if (manobis[posic]==8){probabilidades[169]<-1}
+	if (manobis[posic]==7){probabilidades[170]<-1}
+	if (manobis[posic]==6){probabilidades[171]<-1}
+	if (manobis[posic]==5){probabilidades[172]<-1}
+	if (manobis[posic]==4){probabilidades[173]<-1}
+	if (manobis[posic]==3){probabilidades[174]<-1}
+}
+	if (repeticiones[1]==14&incluido=="falso"){probabilidades[175]<-1}
+
+if (repeticiones[1]==13&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[176]<-1}
+	if (manobis[posic]==12){probabilidades[177]<-1}
+	if (manobis[posic]==11){probabilidades[178]<-1}
+	if (manobis[posic]==10){probabilidades[179]<-1}
+	if (manobis[posic]==9){probabilidades[180]<-1}
+	if (manobis[posic]==8){probabilidades[181]<-1}
+	if (manobis[posic]==7){probabilidades[182]<-1}
+	if (manobis[posic]==6){probabilidades[183]<-1}
+	if (manobis[posic]==5){probabilidades[184]<-1}
+	if (manobis[posic]==4){probabilidades[185]<-1}
+	if (manobis[posic]==3){probabilidades[186]<-1}
+}
+	if (repeticiones[1]==13&incluido=="falso"){probabilidades[187]<-1}
+
+if (repeticiones[1]==12&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[188]<-1}
+	if (manobis[posic]==13){probabilidades[189]<-1}
+	if (manobis[posic]==11){probabilidades[190]<-1}
+	if (manobis[posic]==10){probabilidades[191]<-1}
+	if (manobis[posic]==9){probabilidades[192]<-1}
+	if (manobis[posic]==8){probabilidades[193]<-1}
+	if (manobis[posic]==7){probabilidades[194]<-1}
+	if (manobis[posic]==6){probabilidades[195]<-1}
+	if (manobis[posic]==5){probabilidades[196]<-1}
+	if (manobis[posic]==4){probabilidades[197]<-1}
+	if (manobis[posic]==3){probabilidades[198]<-1}
+}
+	if (repeticiones[1]==12&incluido=="falso"){probabilidades[199]<-1}
+
+if (repeticiones[1]==11&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[200]<-1}
+	if (manobis[posic]==13){probabilidades[201]<-1}
+	if (manobis[posic]==12){probabilidades[202]<-1}
+	if (manobis[posic]==10){probabilidades[203]<-1}
+	if (manobis[posic]==9){probabilidades[204]<-1}
+	if (manobis[posic]==8){probabilidades[205]<-1}
+	if (manobis[posic]==7){probabilidades[206]<-1}
+	if (manobis[posic]==6){probabilidades[207]<-1}
+	if (manobis[posic]==5){probabilidades[208]<-1}
+	if (manobis[posic]==4){probabilidades[209]<-1}
+	if (manobis[posic]==3){probabilidades[210]<-1}
+}
+	if (repeticiones[1]==11&incluido=="falso"){probabilidades[211]<-1}
+
+if (repeticiones[1]==10&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[212]<-1}
+	if (manobis[posic]==13){probabilidades[213]<-1}
+	if (manobis[posic]==12){probabilidades[214]<-1}
+	if (manobis[posic]==11){probabilidades[215]<-1}
+	if (manobis[posic]==9){probabilidades[216]<-1}
+	if (manobis[posic]==8){probabilidades[217]<-1}
+	if (manobis[posic]==7){probabilidades[218]<-1}
+	if (manobis[posic]==6){probabilidades[219]<-1}
+	if (manobis[posic]==5){probabilidades[220]<-1}
+	if (manobis[posic]==4){probabilidades[221]<-1}
+	if (manobis[posic]==3){probabilidades[222]<-1}
+}
+	if (repeticiones[1]==10&incluido=="falso"){probabilidades[223]<-1}
+
+if (repeticiones[1]==9&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[224]<-1}
+	if (manobis[posic]==13){probabilidades[225]<-1}
+	if (manobis[posic]==12){probabilidades[226]<-1}
+	if (manobis[posic]==11){probabilidades[227]<-1}
+	if (manobis[posic]==10){probabilidades[228]<-1}
+	if (manobis[posic]==8){probabilidades[229]<-1}
+	if (manobis[posic]==7){probabilidades[230]<-1}
+	if (manobis[posic]==6){probabilidades[231]<-1}
+	if (manobis[posic]==5){probabilidades[232]<-1}
+	if (manobis[posic]==4){probabilidades[233]<-1}
+	if (manobis[posic]==3){probabilidades[234]<-1}
+}
+	if (repeticiones[1]==9&incluido=="falso"){probabilidades[235]<-1}
+
+if (repeticiones[1]==8&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[236]<-1}
+	if (manobis[posic]==13){probabilidades[237]<-1}
+	if (manobis[posic]==12){probabilidades[238]<-1}
+	if (manobis[posic]==11){probabilidades[239]<-1}
+	if (manobis[posic]==10){probabilidades[240]<-1}
+	if (manobis[posic]==9){probabilidades[241]<-1}
+	if (manobis[posic]==7){probabilidades[242]<-1}
+	if (manobis[posic]==6){probabilidades[243]<-1}
+	if (manobis[posic]==5){probabilidades[244]<-1}
+	if (manobis[posic]==4){probabilidades[245]<-1}
+	if (manobis[posic]==3){probabilidades[246]<-1}
+}
+	if (repeticiones[1]==8&incluido=="falso"){probabilidades[247]<-1}
+
+if (repeticiones[1]==7&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[248]<-1}
+	if (manobis[posic]==13){probabilidades[249]<-1}
+	if (manobis[posic]==12){probabilidades[250]<-1}
+	if (manobis[posic]==11){probabilidades[251]<-1}
+	if (manobis[posic]==10){probabilidades[252]<-1}
+	if (manobis[posic]==9){probabilidades[253]<-1}
+	if (manobis[posic]==8){probabilidades[254]<-1}
+	if (manobis[posic]==6){probabilidades[255]<-1}
+	if (manobis[posic]==5){probabilidades[256]<-1}
+	if (manobis[posic]==4){probabilidades[257]<-1}
+	if (manobis[posic]==3){probabilidades[258]<-1}
+}
+	if (repeticiones[1]==7&incluido=="falso"){probabilidades[259]<-1}
+
+if (repeticiones[1]==6&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[260]<-1}
+	if (manobis[posic]==13){probabilidades[261]<-1}
+	if (manobis[posic]==12){probabilidades[262]<-1}
+	if (manobis[posic]==11){probabilidades[263]<-1}
+	if (manobis[posic]==10){probabilidades[264]<-1}
+	if (manobis[posic]==9){probabilidades[265]<-1}
+	if (manobis[posic]==8){probabilidades[266]<-1}
+	if (manobis[posic]==7){probabilidades[267]<-1}
+	if (manobis[posic]==5){probabilidades[268]<-1}
+	if (manobis[posic]==4){probabilidades[269]<-1}
+	if (manobis[posic]==3){probabilidades[270]<-1}
+}
+	if (repeticiones[1]==6&incluido=="falso"){probabilidades[271]<-1}
+
+if (repeticiones[1]==5&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[272]<-1}
+	if (manobis[posic]==13){probabilidades[273]<-1}
+	if (manobis[posic]==12){probabilidades[274]<-1}
+	if (manobis[posic]==11){probabilidades[275]<-1}
+	if (manobis[posic]==10){probabilidades[276]<-1}
+	if (manobis[posic]==9){probabilidades[277]<-1}
+	if (manobis[posic]==8){probabilidades[278]<-1}
+	if (manobis[posic]==7){probabilidades[279]<-1}
+	if (manobis[posic]==6){probabilidades[280]<-1}
+	if (manobis[posic]==4){probabilidades[281]<-1}
+	if (manobis[posic]==3){probabilidades[282]<-1}
+}
+	if (repeticiones[1]==5&incluido=="falso"){probabilidades[283]<-1}
+
+if (repeticiones[1]==4&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[284]<-1}
+	if (manobis[posic]==13){probabilidades[285]<-1}
+	if (manobis[posic]==12){probabilidades[286]<-1}
+	if (manobis[posic]==11){probabilidades[287]<-1}
+	if (manobis[posic]==10){probabilidades[288]<-1}
+	if (manobis[posic]==9){probabilidades[289]<-1}
+	if (manobis[posic]==8){probabilidades[290]<-1}
+	if (manobis[posic]==7){probabilidades[291]<-1}
+	if (manobis[posic]==6){probabilidades[292]<-1}
+	if (manobis[posic]==5){probabilidades[293]<-1}
+	if (manobis[posic]==3){probabilidades[294]<-1}
+}
+	if (repeticiones[1]==4&incluido=="falso"){probabilidades[295]<-1}
+
+if (repeticiones[1]==3&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[296]<-1}
+	if (manobis[posic]==13){probabilidades[297]<-1}
+	if (manobis[posic]==12){probabilidades[298]<-1}
+	if (manobis[posic]==11){probabilidades[299]<-1}
+	if (manobis[posic]==10){probabilidades[300]<-1}
+	if (manobis[posic]==9){probabilidades[301]<-1}
+	if (manobis[posic]==8){probabilidades[302]<-1}
+	if (manobis[posic]==7){probabilidades[303]<-1}
+	if (manobis[posic]==6){probabilidades[304]<-1}
+	if (manobis[posic]==5){probabilidades[305]<-1}
+	if (manobis[posic]==4){probabilidades[306]<-1}
+}
+	if (repeticiones[1]==3&incluido=="falso"){probabilidades[307]<-1}
+
+if (repeticiones[1]==2&incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[308]<-1}
+	if (manobis[posic]==13){probabilidades[309]<-1}
+	if (manobis[posic]==12){probabilidades[310]<-1}
+	if (manobis[posic]==11){probabilidades[311]<-1}
+	if (manobis[posic]==10){probabilidades[312]<-1}
+	if (manobis[posic]==9){probabilidades[313]<-1}
+	if (manobis[posic]==8){probabilidades[314]<-1}
+	if (manobis[posic]==7){probabilidades[315]<-1}
+	if (manobis[posic]==6){probabilidades[316]<-1}
+	if (manobis[posic]==5){probabilidades[317]<-1}
+	if (manobis[posic]==4){probabilidades[318]<-1}
+}
+	if (repeticiones[1]==2&incluido=="falso"){probabilidades[319]<-1}
+
+}
+
+}
+
+##PAREJA(RIVAL)
+
+if (repeticionesrival[2]==2&max(probabilidadesrival[1:163])==0){
+
+posic<-0
+incluido<-"falso"
+caunt<-1
+maunobis<-manobisrival[1:7]
+for (ç in 1:7){
+	if(maunobis[ç]==repeticionesrival[1]){
+		maunobis[ç]<-0
+	}
+}
+posic<-which.max(maunobis)
+
+while(caunt<=3){
+	posic<-which.max(maunobis)
+	if (posic==1|posic==2){
+	incluido<-"cierto"
+	caunt<-10
+	}
+	else{
+	maunobis[posic]<-0
+	caunt<-caunt+1
+	}
+}
+
+
+if (repeticionescte[1]==repeticionesrival[1]&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[320]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[321]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[322]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[323]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[324]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[325]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[326]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[327]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[328]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[329]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[330]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[331]<-1}
+}
+	if (repeticionescte[1]==repeticionesrival[1]&incluido=="falso"){probabilidadesrival[332]<-1}
+
+
+if (repeticionesrival[1]>repeticionescte[1]){
+
+
+
+if (repeticionesrival[1]==14&incluido=="cierto"){
+	if (manobisrival[posic]==13){probabilidadesrival[164]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[165]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[166]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[167]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[168]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[169]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[170]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[171]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[172]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[173]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[174]<-1}
+}
+	if (repeticionesrival[1]==14&incluido=="falso"){probabilidadesrival[175]<-1}
+
+if (repeticionesrival[1]==13&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[176]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[177]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[178]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[179]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[180]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[181]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[182]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[183]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[184]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[185]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[186]<-1}
+}
+	if (repeticionesrival[1]==13&incluido=="falso"){probabilidadesrival[187]<-1}
+
+if (repeticionesrival[1]==12&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[188]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[189]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[190]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[191]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[192]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[193]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[194]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[195]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[196]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[197]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[198]<-1}
+}
+	if (repeticionesrival[1]==12&incluido=="falso"){probabilidadesrival[199]<-1}
+
+if (repeticionesrival[1]==11&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[200]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[201]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[202]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[203]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[204]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[205]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[206]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[207]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[208]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[209]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[210]<-1}
+}
+	if (repeticionesrival[1]==11&incluido=="falso"){probabilidadesrival[211]<-1}
+
+if (repeticionesrival[1]==10&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[212]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[213]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[214]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[215]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[216]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[217]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[218]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[219]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[220]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[221]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[222]<-1}
+}
+	if (repeticionesrival[1]==10&incluido=="falso"){probabilidadesrival[223]<-1}
+
+if (repeticionesrival[1]==9&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[224]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[225]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[226]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[227]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[228]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[229]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[230]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[231]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[232]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[233]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[234]<-1}
+}
+	if (repeticionesrival[1]==9&incluido=="falso"){probabilidadesrival[235]<-1}
+
+if (repeticionesrival[1]==8&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[236]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[237]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[238]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[239]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[240]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[241]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[242]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[243]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[244]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[245]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[246]<-1}
+}
+	if (repeticionesrival[1]==8&incluido=="falso"){probabilidadesrival[247]<-1}
+
+if (repeticionesrival[1]==7&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[248]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[249]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[250]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[251]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[252]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[253]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[254]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[255]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[256]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[257]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[258]<-1}
+}
+	if (repeticionesrival[1]==7&incluido=="falso"){probabilidadesrival[259]<-1}
+
+if (repeticionesrival[1]==6&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[260]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[261]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[262]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[263]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[264]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[265]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[266]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[267]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[268]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[269]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[270]<-1}
+}
+	if (repeticionesrival[1]==6&incluido=="falso"){probabilidadesrival[271]<-1}
+
+if (repeticionesrival[1]==5&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[272]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[273]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[274]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[275]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[276]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[277]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[278]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[279]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[280]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[281]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[282]<-1}
+}
+	if (repeticionesrival[1]==5&incluido=="falso"){probabilidadesrival[283]<-1}
+
+if (repeticionesrival[1]==4&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[284]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[285]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[286]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[287]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[288]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[289]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[290]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[291]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[292]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[293]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[294]<-1}
+}
+	if (repeticionesrival[1]==4&incluido=="falso"){probabilidadesrival[295]<-1}
+
+if (repeticionesrival[1]==3&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[296]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[297]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[298]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[299]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[300]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[301]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[302]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[303]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[304]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[305]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[306]<-1}
+}
+	if (repeticionesrival[1]==3&incluido=="falso"){probabilidadesrival[307]<-1}
+
+if (repeticionesrival[1]==2&incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[308]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[309]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[310]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[311]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[312]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[313]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[314]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[315]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[316]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[317]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[318]<-1}
+}
+	if (repeticionesrival[1]==2&incluido=="falso"){probabilidadesrival[319]<-1}
+
+}
+
+}
+
+
+##CARTA ALTA
+
+if (max(probabilidades[1:332])==0){
+
+posic<-0
+incluido<-"falso"
+caunt<-1
+maunobis<-manobis[1:7]
+posic<-which.max(maunobis)
+
+while(caunt<=4){
+	posic<-which.max(maunobis)
+	if (posic==1|posic==2){
+	incluido<-"cierto"
+	caunt<-10
+	}
+	else{
+	maunobis[posic]<-0
+	caunt<-caunt+1
+	}
+}
+
+if (incluido=="cierto"){
+	if (manobis[posic]==14){probabilidades[333]<-1}
+	if (manobis[posic]==13){probabilidades[334]<-1}
+	if (manobis[posic]==12){probabilidades[335]<-1}
+	if (manobis[posic]==11){probabilidades[336]<-1}
+	if (manobis[posic]==10){probabilidades[337]<-1}
+	if (manobis[posic]==9){probabilidades[338]<-1}
+	if (manobis[posic]==8){probabilidades[339]<-1}
+	if (manobis[posic]==7){probabilidades[340]<-1}
+	if (manobis[posic]==6){probabilidades[341]<-1}
+	if (manobis[posic]==5){probabilidades[342]<-1}
+	if (manobis[posic]==4){probabilidades[343]<-1}
+	if (manobis[posic]==3){probabilidades[344]<-1}
+}
+if (incluido=="falso"){probabilidades[345]<-1}
+}
+
+
+
+##CARTA ALTA(RIVAL)
+
+if (max(probabilidadesrival[1:332])==0){
+
+posic<-0
+incluido<-"falso"
+caunt<-1
+maunobis<-manobisrival[1:7]
+posic<-which.max(maunobis)
+
+while(caunt<=4){
+	posic<-which.max(maunobis)
+	if (posic==1|posic==2){
+	incluido<-"cierto"
+	caunt<-10
+	}
+	else{
+	maunobis[posic]<-0
+	caunt<-caunt+1
+	}
+}
+
+if (incluido=="cierto"){
+	if (manobisrival[posic]==14){probabilidadesrival[333]<-1}
+	if (manobisrival[posic]==13){probabilidadesrival[334]<-1}
+	if (manobisrival[posic]==12){probabilidadesrival[335]<-1}
+	if (manobisrival[posic]==11){probabilidadesrival[336]<-1}
+	if (manobisrival[posic]==10){probabilidadesrival[337]<-1}
+	if (manobisrival[posic]==9){probabilidadesrival[338]<-1}
+	if (manobisrival[posic]==8){probabilidadesrival[339]<-1}
+	if (manobisrival[posic]==7){probabilidadesrival[340]<-1}
+	if (manobisrival[posic]==6){probabilidadesrival[341]<-1}
+	if (manobisrival[posic]==5){probabilidadesrival[342]<-1}
+	if (manobisrival[posic]==4){probabilidadesrival[343]<-1}
+	if (manobisrival[posic]==3){probabilidadesrival[344]<-1}
+}
+if (incluido=="falso"){probabilidadesrival[345]<-1}
+}
+
+
+medias[,z]<-probabilidades
+mediasrival[,z]<-probabilidadesrival
+}
+
+for (u in 1:nrow(medias)){
+vecmedias[u]<-mean(medias[u,])
+vecmediasrival[u]<-mean(mediasrival[u,])
+}
+
+for (r in 1:(length(vecmedias)-1)){
+if (vecmedias[r]!=0){
+victoria<-victoria+(vecmedias[r]*(sum(vecmediasrival[(r+1):length(vecmediasrival)])))
+}
+if (vecmedias[r]!=0&vecmediasrival[r]!=0){
+empate<-empate+(vecmedias[r]*vecmediasrival[r])
+}
+}
+victoria<-victoria*100
+empate<-empate*100
+derrota<-100-victoria-empate
+
+col1<-c("Victoria","Empate","Derrota")
+col2<-c(0,0,0)
+decision<-data.frame(col1,col2)
+colnames(decision)<-c("Escenario","%")
+decision[1,2]<-victoria
+decision[2,2]<-empate
+decision[3,2]<-derrota
+
+return(decision)
+}
+
+
+
+##mano(84,83,52,111,93,31,22)
+
+
+
+
+
+

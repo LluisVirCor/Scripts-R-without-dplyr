@@ -1,0 +1,498 @@
+##install.packages("openxlsx")
+##install.packages("stringi") 
+##install.packages("tidyverse") 
+##install.packages("dplyr") ´
+##install.packages("RSelenium")
+library(RSelenium)
+library(tidyverse)                    
+library(openxlsx)
+library(stringi) 
+##library(dplyr) 
+library(RcmdrMisc)
+##Emilia<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Sheet1", stringsAsFactors=TRUE)
+
+########POLAND########
+Add<-readXL("FICHERO",rownames=FALSE, header=FALSE, na="", sheet="Arkusz1", stringsAsFactors=TRUE)
+Add2<-Add[6:nrow(Add),]
+Add2<-data.frame(rep('4200',nrow(Add2)),rep('4201',nrow(Add2)),Add2[,5],Add2[,3])
+##colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+##Emilia<-rbind(Emilia,Add2)
+Emilia<-Add2
+########
+  
+
+
+########HUNGARY########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########   
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", sheet="Current stock", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4300',nrow(Add2)),rep('4301',nrow(Add2)),Add2[,3],Add2[,7])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+######## 
+
+
+
+########GREECE########
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", stringsAsFactors=TRUE)
+Add2[,1]<-gsub( " .*$", "", Add2[,1] )
+Add2<-data.frame(rep('4800',nrow(Add2)),rep('4834',nrow(Add2)),Add2[,1],Add2[,5])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+Add2<-readXL("FICHERO",rownames=FALSE, header=TRUE, na="", stringsAsFactors=TRUE)
+Add2<-data.frame(rep('4800',nrow(Add2)),rep('4834',nrow(Add2)),Add2[,9],Add2[,4])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+
+
+########ITALY########
+
+driver <- rsDriver(browser="firefox", port=4555L, verbose=F, chromever = NULL)
+remote_driver <- driver[["client"]]
+remote_driver$open()
+
+url<-"URL"
+
+remote_driver$navigate(url)
+
+file<-"FICHERO"
+file2<-"FICHERO"
+wb<-loadWorkbook(file)
+saveWorkbook(wb, "FILE")
+Add2<-readXL("FILE",rownames=FALSE, header=TRUE, na="", stringsAsFactors=TRUE)
+ware<-c(rep('0500',nrow(Add2)))
+pos<-which(stri_sub(Add2[,23],-1,-1)=="Z")
+ware[pos]<-'0509'
+Add2[,23]<-as.character(Add2[,23])
+Add2[pos,23]<-stri_sub(Add2[pos,23], 1, -2)
+Add2<-data.frame(rep('4100',nrow(Add2)),ware,Add2[,23],Add2[,18])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.character(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+########ITALY########
+wb<-loadWorkbook(file2)
+saveWorkbook(wb, "FILE")
+Add2<-readXL("FILE",rownames=FALSE, header=TRUE, na="", stringsAsFactors=TRUE)
+ware<-c(rep('0500',nrow(Add2)))
+pos<-which(stri_sub(Add2[,30],-1,-1)=="Z")
+ware[pos]<-'0509'
+Add2[,30]<-as.character(Add2[,30])
+Add2[pos,30]<-stri_sub(Add2[pos,30], 1, -2)
+Add2<-data.frame(rep('4100',nrow(Add2)),ware,Add2[,30],Add2[,12])
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+########GERMANY########
+Add2<-readXL("FILE",rownames=FALSE, header=TRUE, na="", sheet="Totals", stringsAsFactors=FALSE)
+a<-which.min(substr(Add2[2,],1,3)=="MAG")
+b<-which.max(substr(Add2[2,],1,3)=="MAG")
+c<-rep("a",b-a)
+for (i in 1:length(c)){
+	if (i<10){c[i]<-gsub(" ","",paste("5815CMC00",i))}
+	else if (i<100){c[i]<-gsub(" ","",paste("5815CMC0",i))}
+	else if (i>=100){c[i]<-gsub(" ","",paste("5815CMC",i))}
+}
+d<-Add2[13,a:(b-1)]
+d<-as.numeric(d)
+Add2<-data.frame(rep('4500',length(c)),rep('4534',length(c)),c,d)
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+########GERMANY########
+Add2<-readXL("FILE",rownames=FALSE, header=TRUE, na="", sheet="Totals", stringsAsFactors=FALSE)
+a<-which.min(substr(Add2[2,],1,3)=="MAG")
+b<-which.max(substr(Add2[2,],1,3)=="MAG")
+c<-rep("a",b-a)
+for (i in 1:length(c)){
+	if (i<10){c[i]<-gsub(" ","",paste("5837CMC00",i))}
+	else if (i<100){c[i]<-gsub(" ","",paste("5837CMC0",i))}
+	else if (i>=100){c[i]<-gsub(" ","",paste("5837CMC",i))}
+}
+d<-Add2[14,a:(b-1)]
+d<-as.numeric(d)
+Add2<-data.frame(rep('4500',length(c)),rep('4534',length(c)),c,d)
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+########GERMANY########
+Add2<-readXL("FILE",rownames=FALSE, header=TRUE, na="", sheet="Totals", stringsAsFactors=FALSE)
+a<-which.min(substr(Add2[2,],1,3)=="MAG")
+b<-which.max(substr(Add2[2,],1,3)=="MAG")
+c<-rep("a",b-a)
+for (i in 1:length(c)){
+	if (i<10){c[i]<-gsub(" ","",paste("5838CMC00",i))}
+	else if (i<100){c[i]<-gsub(" ","",paste("5838CMC0",i))}
+	else if (i>=100){c[i]<-gsub(" ","",paste("5838CMC",i))}
+}
+d<-Add2[13,a:(b-1)]
+d<-as.numeric(d)
+Add2<-data.frame(rep('4500',length(c)),rep('4534',length(c)),c,d)
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+########GERMANY########
+Add2<-readXL("FILE",rownames=FALSE, header=TRUE, na="", sheet="Totals", stringsAsFactors=FALSE)
+a<-which.min(substr(Add2[2,],1,3)=="MAG")
+b<-which.max(substr(Add2[2,],1,3)=="MAG")
+c<-rep("a",b-a)
+for (i in 1:length(c)){
+	if (i<10){c[i]<-gsub(" ","",paste("3071CMC00",i))}
+	else if (i<100){c[i]<-gsub(" ","",paste("3071CMC0",i))}
+	else if (i>=100){c[i]<-gsub(" ","",paste("3071CMC",i))}
+}
+d<-Add2[13,a:(b-1)]
+d<-as.numeric(d)
+Add2<-data.frame(rep('4500',length(c)),rep('4534',length(c)),c,d)
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+########GERMANY########
+Add2<-readXL("FILE",rownames=FALSE, header=TRUE, na="", sheet="Totals", stringsAsFactors=FALSE)
+a<-which.min(substr(Add2[2,],1,3)=="MAG")
+b<-which.max(substr(Add2[2,],1,3)=="MAG")
+c<-rep("a",b-a)
+for (i in 1:length(c)){
+	if (i<10){c[i]<-gsub(" ","",paste("3001CMC00",i))}
+	else if (i<100){c[i]<-gsub(" ","",paste("3001CMC0",i))}
+	else if (i>=100){c[i]<-gsub(" ","",paste("3001CMC",i))}
+}
+d<-Add2[13,a:(b-1)]
+d<-as.numeric(d)
+Add2<-data.frame(rep('4500',length(c)),rep('4534',length(c)),c,d)
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+########GERMANY########
+Add2<-readXL("FILE",rownames=FALSE, header=TRUE, na="", sheet="Totals", stringsAsFactors=FALSE)
+a<-which.min(substr(Add2[2,],1,3)=="MAG")
+b<-which.max(substr(Add2[2,],1,3)=="MAG")
+c<-rep("a",b-a)
+for (i in 1:length(c)){
+	if (i<10){c[i]<-gsub(" ","",paste("9306CMC00",i))}
+	else if (i<100){c[i]<-gsub(" ","",paste("9306CMC0",i))}
+	else if (i>=100){c[i]<-gsub(" ","",paste("9306CMC",i))}
+}
+d<-Add2[13,a:(b-1)]
+d<-as.numeric(d)
+Add2<-data.frame(rep('4500',length(c)),rep('4534',length(c)),c,d)
+colnames(Add2)<-colnames(Emilia)
+Add2[,1]<-as.numeric(Add2[,1])
+Add2[,2]<-as.numeric(Add2[,2])
+Add2[,3]<-as.factor(Add2[,3])
+Add2[,4]<-as.numeric(Add2[,4])
+Emilia<-rbind(Emilia,Add2)
+########
+
+
+colnames(Emilia)<-c("Plant","Warehouse","Material Code (PMD code)","Quantity")
+Emilia<-Emilia[-c(which(Emilia[3]=="******************")),]
+Emilia_tbl<-Emilia%>%group_by(Plant,Warehouse,Emilia[,3])
+Emilia_qua<-Emilia_tbl%>%summarise(Quantity=sum(Quantity))
+Date<-rep(today(),nrow(Emilia_qua))
+Emilia2<-cbind(Date,Emilia_qua)
+colnames(Emilia2)<-c("Elaboration date","Plant","Warehouse","Material Code (PMD code)","Quantity")
+write.xlsx(Emilia2,"PATH",sheetName="Sheet1")

@@ -1,0 +1,134 @@
+##LLIBRERIES NECESSÀRIES
+library("flexdashboard")
+library(patchwork)
+library(gridExtra)
+library(tidyverse)
+library(stringr)
+library(flextable)
+library(ggplot2)
+
+##LECTURA DE LA TAULA I PREPARACIÓ/RECODIFICACIÓ
+taula2<-read_csv("PATH_EXCEL")
+#summary(taula2)
+#table(taula2$any_par)
+taula2<-taula2[!is.na(taula2$any_par),]
+#table(taula2[,2])
+#table(taula2$tipus)
+#table(taula2$artic)
+taula<-taula2[which((taula2[,8]=="2005/06"|taula2[,8]=="2007/08"|taula2[,8]=="2009/10"|taula2[,8]=="2011/12"|taula2[,8]=="2013/14"|taula2[,8]=="2015/16"|taula2[,8]=="2017/18"|taula2[,8]=="2019/20")&taula2[,2]=="matched (3)"&taula2[,12]=="Primària"&taula2[,10]=="Genoll"),]
+taula$any_par<-str_replace_all(taula$any_par,"/", "-")
+any_clas<-recode(taula$any_par, '2005-06' = "2005-2008", '2007-08' = "2005-2008", '2009-10' = "2009-2012", '2011-12' = "2009-2012", '2013-14' = "2013-2016", '2015-16' = "2013-2016", '2017-18' = "2017-2020", '2019-20' = "2017-2020")
+#table(any_clas)
+taula<-cbind(taula,any_clas)
+
+##PREPARACIÓ DE LA TAULA PER INCLOURE A L'INFORME
+anys<-unique(taula$any_clas)
+metrics<-c("N","Edat Mitjana (DE)","% Dones")
+noms_columna<-expand.grid(metrics,anys)
+
+regio<-unique(taula[,4])
+totpa<-unique(taula[,14])
+totpa<-c(totpa[1],totpa[3])
+noms_fila<-expand.grid(totpa,regio)
+
+
+
+ta1<-matrix("",nrow=16,ncol=14)
+ta1<-as.data.frame(ta1)
+noms_fila[,1]<-as.character(noms_fila[,1])
+noms_fila[,2]<-as.character(noms_fila[,2])
+noms_columna[,1]<-as.character(noms_columna[,1])
+noms_columna[,2]<-as.character(noms_columna[,2])
+
+ta1[3:nrow(ta1),1]<-noms_fila[,2]
+ta1[3:nrow(ta1),2]<-noms_fila[,1]
+ta1[1,3:ncol(ta1)]<-noms_columna[,2]
+ta1[2,3:ncol(ta1)]<-noms_columna[,1]
+
+
+##BUCLE PER GENERAR LA MATRIU DE DADES QUE HA D'APARÈIXER A LA TAULA
+for (i in 3:nrow(ta1)){
+	for (z in 3:ncol(ta1)){
+		if (ta1[2,z]=="N"){
+			ta1[i,z]<-nrow(taula[which(taula[,4]==ta1[i,1]&taula[,15]==ta1[1,z]&taula[,14]==ta1[i,2]),])
+			con<-ta1[i,z]
+		}else if (ta1[2,z]=="Edat Mitjana (DE)"){
+			if (con>1){
+				ta1[i,z]<-sd(taula[which(taula[,4]==ta1[i,1]&taula[,15]==ta1[1,z]&taula[,14]==ta1[i,2]),6],na.rm = TRUE)
+			}else{
+				ta1[i,z]<-0
+			}
+		}else if (ta1[2,z]=="% Dones"){
+			if (con>0){
+				ta1[i,z]<-sprintf("%.1f%%",(nrow(taula[which(taula[,4]==ta1[i,1]&taula[,15]==ta1[1,z]&taula[,14]==ta1[i,2]&taula[,5]==1),])/nrow(taula[which(taula[,4]==ta1[i,1]&taula[,15]==ta1[1,z]&taula[,14]==ta1[i,2]),]))*100)
+			}else{
+				ta1[i,z]<-sprintf("%.1f%%",0)
+			}
+		}
+	}
+}
+
+
+##DISSENY DE LA TAULA
+
+ft<-flextable(ta1)
+ft<-merge_v(ft, j = 'V1')
+ft<-merge_at(ft, i = 1:2, j=2)
+ft<-merge_at(ft, i = 1, j=3:5)
+ft<-merge_at(ft, i = 1, j=6:8)
+ft<-merge_at(ft, i = 1, j=9:11)
+ft<-merge_at(ft, i = 1, j=12:14)
+
+
+ft <- width(ft, j = 1, width = 2.5)
+ft<-bold(ft,j = 1)
+ft<-bold(ft,i = 1:2)
+ft <- delete_part(ft, part = "header")
+ft <- theme_box(ft)
+ft<-align(ft, i = 1, align = "center")
+autofit(ft)
+
+##VARIABLE ORDENADA I SUBDIVISIÓ DE LES DADES EN FUNCIÓ DE LES NECESSITATS DEL GRÀFIC
+
+
+taula$edat_g<-factor(taula$edat_g, levels = c("<65", "65-74", "75-84", ">=85"))
+
+taulatot<-subset(taula,tipus_proc=="Total")
+taulapar<-subset(taula,tipus_proc=="Parcial")
+
+
+
+##VARIABLE FREQÜÈNCIES PER INCLOURE AL GRÀFIC I QUE APAREIXI EN PERCENTATGES
+
+frequenciestot<-taulatot[,15]
+frequenciestot[which(frequenciestot=="2005-2008")]<-1/nrow(taulatot[which(taulatot[,15]=="2005-2008"),])
+frequenciestot[which(frequenciestot=="2009-2012")]<-1/nrow(taulatot[which(taulatot[,15]=="2009-2012"),])
+frequenciestot[which(frequenciestot=="2013-2016")]<-1/nrow(taulatot[which(taulatot[,15]=="2013-2016"),])
+frequenciestot[which(frequenciestot=="2017-2020")]<-1/nrow(taulatot[which(taulatot[,15]=="2017-2020"),])
+frequenciestot<-as.numeric(frequenciestot)
+
+
+
+taulatot<-cbind(taulatot,frequenciestot)
+
+
+frequenciespar<-taulapar[,15]
+frequenciespar[which(frequenciespar=="2005-2008")]<-1/nrow(taulapar[which(taulapar[,15]=="2005-2008"),])
+frequenciespar[which(frequenciespar=="2009-2012")]<-1/nrow(taulapar[which(taulapar[,15]=="2009-2012"),])
+frequenciespar[which(frequenciespar=="2013-2016")]<-1/nrow(taulapar[which(taulapar[,15]=="2013-2016"),])
+frequenciespar[which(frequenciespar=="2017-2020")]<-1/nrow(taulapar[which(taulapar[,15]=="2017-2020"),])
+frequenciespar<-as.numeric(frequenciespar)
+
+
+
+taulapar<-cbind(taulapar,frequenciespar)
+
+##GENERACIÓ DEL GRÀFIC
+attach(taulatot)
+p1<-ggplot(taulatot, aes(x = taulatot[,15], y = frequenciestot, fill = edat_g)) + geom_bar(stat = "identity", position = "stack") + scale_y_continuous(labels = scales::percent) + labs(title = "Total", x = "", y = "") + theme(plot.title = element_text(hjust = 0.5)) + scale_fill_brewer(palette = "Oranges")
+detach(taulatot)
+attach(taulapar)
+p2<-ggplot(taulapar, aes(x = taulapar[,15], y = frequenciespar, fill = edat_g)) + geom_bar(stat = "identity", position = "stack") + scale_y_continuous(labels = scales::percent) + labs(title = "Parcial", x = "", y = "") + theme(plot.title = element_text(hjust = 0.5)) + scale_fill_brewer(palette = "Oranges") 
+detach(taulapar)
+combined_plot <- p1 + p2 + plot_layout(guides = "collect") & theme(legend.position = "bottom")
+combined_plot		

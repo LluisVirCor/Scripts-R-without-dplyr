@@ -1,0 +1,163 @@
+##install.packages("RSelenium")
+##install.packages("reticulate")
+library(RSelenium)
+library("readxl")
+library("lubridate")
+library(openxlsx)
+library(reticulate)
+
+driver <- rsDriver(browser="firefox", port=4555L, verbose=F, chromever = NULL)
+remote_driver <- driver[["client"]]
+remote_driver$open()
+
+url<-"https://espacepro-editeurs.francemessagerie.fr/Home/Report?w=63c3921b-ec95-4ac5-bcec-db1ef2b48714&r=8b6d1ccb-a524-4f4d-89bf-1bbfc89a092b&nr=Suivi%20des%20mises%20en%20vente%20(IPMV)&c=cat_en_distribution&nc=En%20distribution&d=dom_logistique&nd=Logistique&l=report&u=_"
+
+remote_driver$navigate(url)
+remote_driver$maxWindowSize()
+
+address_element <- remote_driver$findElement(using = 'css', value = '#Username')
+address_element$sendKeysToElement(list("PRIVATE_USER"))
+address_element <- remote_driver$findElement(using = 'css', value = '#Password')
+address_element$sendKeysToElement(list("PRIVATE_KEY"))
+button_element <- remote_driver$findElement(using = 'css', value = ".btn")
+button_element$clickElement()
+
+Sys.sleep(5)
+
+remote_driver$navigate(url)
+
+Sys.sleep(5)
+
+
+iframe <- remote_driver$findElement(using = "css", value = "#embedContainer > iframe:nth-child(1)")
+remote_driver$switchToFrame(iframe)
+
+Sys.sleep(5)
+
+remote_driver$setWindowSize(width=1000,height=600)
+remote_driver$mouseMoveToLocation(x=300,y=50)
+remote_driver$click()
+out<-remote_driver$findElement(using = 'css', "div.cdk-overlay-container")
+remote_driver$click()
+out<-remote_driver$findElement(using = 'css', ".pbi-glyph-more")
+remote_driver$executeScript('arguments[0].click();', list(out))
+out<-remote_driver$findElement(using = 'css', ".pbi-glyph-export")
+remote_driver$executeScript('arguments[0].click();', list(out))
+remote_driver$maxWindowSize()
+out<-remote_driver$findElement(using = 'css', "button.mat-focus-indicator:nth-child(1)")
+out$clickElement()
+
+Sys.sleep(5)
+
+my_folder<-"FOLDER"
+files_in_folder <- list.files(my_folder, pattern = ".xlsx", full.names = TRUE, recursive = TRUE)
+dir<-files_in_folder[which(file.info(files_in_folder)$ctime>Sys.time()-seconds(40)&file.info(files_in_folder)$ctime<Sys.time()+seconds(40))]
+fichero <- read_excel(dir,col_names=TRUE)
+a<-paste("Indicateur_",paste(Sys.Date()))
+path<-paste('L:/Distribucion/PUser/10_Operaciones/02_FRANCIA/Seguimiento IMV/IPMV_novo formato/',a,'.xlsx')
+#fichero<-as.data.frame(fichero)
+write.xlsx(fichero,path,sheetName="Sheet1")
+
+
+#element_selector <- ".vcMenuBtn"
+# Hide the element
+#remote_driver$executeScript(paste0("document.querySelector('", element_selector, "').style.display = 'none';"))
+
+# Show the element
+#remote_driver$executeScript(paste0("document.querySelector('", element_selector, "').style.display = 'block';"))
+
+
+
+
+#highlightPoint <- function(driver, x, y) {
+#  js_code <- sprintf("var el = document.createElement('div');
+ #                    el.style.width = '5px';
+ #                    el.style.height = '5px';
+#                     el.style.border = '2px solid red';
+#                     el.style.position = 'absolute';
+#                     el.style.top = '%dpx';
+ #                    el.style.left = '%dpx';
+  #                   document.body.appendChild(el);", y, x)
+  #driver$executeScript(js_code)
+#}
+
+#highlightPoint(remote_driver,1800,30)
+
+#remote_driver$mouseMoveToLocation(x=1800,y=30)
+#remote_driver$click()
+
+
+
+
+
+
+#js_code <- "document.getElementsByName('vcMenuBtn').click();"
+#remote_driver$executeScript(js_code)
+
+
+#js_code <- "document.querySelector('button[name="vcMenuBtn"]').click();"
+#remote_driver$executeScript(js_code)
+
+
+##ENVIAR E-MAIL
+
+
+##https://mailtrap.io/blog/setup-smtp-server/#How-to-set-up-local-SMTP-relay-server-on-Windows/#https://mailtrap.io/blog/r-send-email/
+
+
+
+python_code<-"
+def automatizar_mail(dia_envio,asunto,para,cuerpo,copia,archivo=None):
+    import datetime
+    import win32com.client as win32
+    from pathlib import Path
+    today = datetime.datetime.today()
+    outlook = win32.Dispatch('outlook.application')
+    mail = outlook.CreateItem(0)
+    mail.To = para
+    if copia is not None:
+        mail.CC = copia
+    mail.Subject = asunto
+    if cuerpo is not None:
+        mail.HTMLBody = cuerpo
+    else:
+        pass
+    attachment = str(Path(archivo).resolve()) #Para obtener el absolute path y que no de problemas
+    mail.Attachments.Add(attachment)
+    if today.day == dia_envio:
+        mail.Send()
+        print('Mail sent')
+"
+
+py_run_string(python_code)
+py$greet(asunto,para,cuerpo,copia)
+
+path2<-"C:/Users/ulvc2a/AppData/Local/Programs/Python/Python310/python.exe"
+use_python(path2)
+
+asunto<-paste('Fichero IPMV',Sys.Date())
+para<-'CORREO'
+cuerpo<-''
+copia<-'CORREO_CC'
+
+
+
+
+
+
+py_run_string('import datetime')
+py_run_string('import win32com.client as win32')
+py_run_string('from pathlib import Path')
+py_run_string('outlook = win32.Dispatch("outlook.application")')
+py_run_string('mail = outlook.CreateItem(0)')
+py_run_string('mail.To = r.para')
+py_run_string('mail.Subject = r.asunto')
+py_run_string('mail.CC = r.copia')
+py_run_string('mail.Attachments.Add(r.path)')
+py_run_string('mail.Send()')
+
+
+
+
+
+

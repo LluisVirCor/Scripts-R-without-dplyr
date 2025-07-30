@@ -1,0 +1,795 @@
+##https://www.r-orms.org/mixed-integer-linear-programming/packages/roi/
+##https://ds-pl-r-book.netlify.app/optimization-in-r.html
+library(RcmdrMisc)
+library(openxlsx)
+library(ROI)
+library(ROI.plugin.glpk)
+fichero<-readXL("FICHERO",header=TRUE,na="",sheet=1)
+excluir<-readLines("FICHERO")
+excluir<-as.numeric(excluir)
+colnames(fichero)<-fichero[2,]
+fichero<-fichero[c(-1,-2),]
+fichero[fichero<0]<-0
+pesos<-c(0.2,0.2,0.2,0.2,0.2)
+
+
+
+
+co1<-rep(0,nrow(fichero))
+co2<-rep(0,nrow(fichero))
+co3<-rep(0,nrow(fichero))
+co4<-rep(0,nrow(fichero))
+co5<-rep(0,nrow(fichero))
+co6<-rep(0,nrow(fichero))
+co7<-rep(0,nrow(fichero))
+co8<-rep(0,nrow(fichero))
+co9<-rep(0,nrow(fichero))
+co10<-rep(0,nrow(fichero))
+co11<-rep(0,nrow(fichero))
+co12<-rep(0,nrow(fichero))
+co13<-rep(0,nrow(fichero))
+co14<-rep(0,nrow(fichero))
+co15<-rep(0,nrow(fichero))
+z<-0.7
+x<-0.7
+v<-0
+b<-0
+epsilon<-0.03
+beta<-0.03
+gamma<-0
+cont<-0
+cont1<-0
+caida1<-2
+caida2<-1.27
+
+
+	
+for (i in 2:ncol(fichero)){
+	fichero[,i]<-as.numeric(fichero[,i])
+}
+
+
+pes1<-rep(0,nrow(fichero))
+pes2<-rep(0,nrow(fichero))
+pes3<-rep(0,nrow(fichero))
+pes4<-rep(0,nrow(fichero))
+pes5<-rep(0,nrow(fichero))
+pes<-rep(0,nrow(fichero))
+cotasup1<-rep(0,nrow(fichero))
+cotainf1<-rep(0,nrow(fichero))
+cotasup2<-rep(0,nrow(fichero))
+cotainf2<-rep(0,nrow(fichero))
+reparto1<-rep(0,nrow(fichero))
+reparto2<-rep(0,nrow(fichero))
+
+
+
+for (i in 1:nrow(fichero)){
+	cont<-sum(c(fichero[i,5],fichero[i,7],fichero[i,11],fichero[i,13],fichero[i,17],fichero[i,19],fichero[i,23],fichero[i,25],fichero[i,29],fichero[i,31]),na.rm=TRUE)
+	cont1<-sum(c(fichero[i,3],fichero[i,9],fichero[i,15],fichero[i,21],fichero[i,27]),na.rm=TRUE)
+	alfa<-0
+	if (is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])){
+	} else if (fichero[i,3]>=0&is.na(fichero[i,5])&is.na(fichero[i,7])){
+		fichero[i,4]<-round(fichero[i,2]/caida1)
+		fichero[i,5]<-round(fichero[i,3]/caida1)
+		fichero[i,6]<-round(fichero[i,4]/caida2)
+		fichero[i,7]<-round(fichero[i,5]/caida2)
+	} else if (is.na(fichero[i,3])&fichero[i,5]>=0&is.na(fichero[i,7])){
+		fichero[i,2]<-fichero[i,4]*caida1
+		fichero[i,3]<-fichero[i,5]*caida1
+		fichero[i,6]<-round(fichero[i,4]/caida2)
+		fichero[i,7]<-round(fichero[i,5]/caida2)
+	} else if (is.na(fichero[i,3])&is.na(fichero[i,5])&fichero[i,7]>=0){
+		fichero[i,2]<-fichero[i,6]*(caida1*2)
+		fichero[i,3]<-fichero[i,7]*(caida1*2)
+		fichero[i,4]<-fichero[i,6]*caida2
+		fichero[i,5]<-fichero[i,7]*caida2	
+	} else if (is.na(fichero[i,3])&fichero[i,5]>=0&fichero[i,7]>=0){
+		fichero[i,2]<-fichero[i,4]*caida1
+		fichero[i,3]<-fichero[i,5]*caida1
+	} else if (fichero[i,3]>=0&is.na(fichero[i,5])&fichero[i,7]>=0){
+		fichero[i,4]<-round(fichero[i,2]/caida1)
+		fichero[i,5]<-round(fichero[i,3]/caida1)
+	} else if (fichero[i,3]>=0&fichero[i,5]>=0&is.na(fichero[i,7])){
+		fichero[i,6]<-round(fichero[i,4]/caida2)
+		fichero[i,7]<-round(fichero[i,5]/caida2)
+	}
+
+
+	
+	if (is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])){
+	}else if (fichero[i,9]>=0&is.na(fichero[i,11])&is.na(fichero[i,13])){
+		fichero[i,10]<-round(fichero[i,8]/caida1)
+		fichero[i,11]<-round(fichero[i,9]/caida1)
+		fichero[i,12]<-round(fichero[i,10]/caida2)
+		fichero[i,13]<-round(fichero[i,11]/caida2)
+	} else if (is.na(fichero[i,9])&fichero[i,11]>=0&is.na(fichero[i,13])){
+		fichero[i,8]<-fichero[i,10]*caida1
+		fichero[i,9]<-fichero[i,11]*caida1
+		fichero[i,12]<-round(fichero[i,10]/caida2)
+		fichero[i,13]<-round(fichero[i,11]/caida2)
+	} else if (is.na(fichero[i,9])&is.na(fichero[i,11])&fichero[i,13]>=0){
+		fichero[i,8]<-fichero[i,12]*(caida1*2)
+		fichero[i,9]<-fichero[i,13]*(caida1*2)
+		fichero[i,10]<-fichero[i,12]*caida2
+		fichero[i,11]<-fichero[i,13]*caida2	
+	} else if (is.na(fichero[i,9])&fichero[i,11]>=0&fichero[i,13]>=0){
+		fichero[i,8]<-fichero[i,10]*caida1
+		fichero[i,9]<-fichero[i,11]*caida1
+	} else if (fichero[i,9]>=0&is.na(fichero[i,11])&fichero[i,13]>=0){
+		fichero[i,10]<-round(fichero[i,8]/caida1)
+		fichero[i,11]<-round(fichero[i,9]/caida1)
+	} else if (fichero[i,9]>=0&fichero[i,11]>=0&is.na(fichero[i,13])){
+		fichero[i,12]<-round(fichero[i,10]/caida2)
+		fichero[i,13]<-round(fichero[i,11]/caida2)
+	}
+
+
+
+	 if (is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])){
+	 }else if (fichero[i,15]>=0&is.na(fichero[i,17])&is.na(fichero[i,19])){
+		fichero[i,16]<-round(fichero[i,14]/caida1)
+		fichero[i,17]<-round(fichero[i,15]/caida1)
+		fichero[i,18]<-round(fichero[i,16]/caida2)
+		fichero[i,19]<-round(fichero[i,17]/caida2)
+	} else if (is.na(fichero[i,15])&fichero[i,17]>=0&is.na(fichero[i,19])){
+		fichero[i,14]<-fichero[i,16]*caida1
+		fichero[i,15]<-fichero[i,17]*caida1
+		fichero[i,18]<-round(fichero[i,16]/caida2)
+		fichero[i,19]<-round(fichero[i,17]/caida2)
+	} else if (is.na(fichero[i,15])&is.na(fichero[i,17])&fichero[i,19]>=0){
+		fichero[i,14]<-fichero[i,18]*(caida1*2)
+		fichero[i,15]<-fichero[i,19]*(caida1*2)
+		fichero[i,16]<-fichero[i,18]*caida2
+		fichero[i,17]<-fichero[i,19]*caida2	
+	} else if (is.na(fichero[i,15])&fichero[i,17]>=0&fichero[i,19]>=0){
+		fichero[i,14]<-fichero[i,16]*caida1
+		fichero[i,15]<-fichero[i,17]*caida1
+	} else if (fichero[i,15]>=0&is.na(fichero[i,17])&fichero[i,19]>=0){
+		fichero[i,16]<-round(fichero[i,14]/caida1)
+		fichero[i,17]<-round(fichero[i,15]/caida1)
+	} else if (fichero[i,15]>=0&fichero[i,17]>=0&is.na(fichero[i,19])){
+		fichero[i,18]<-round(fichero[i,16]/caida2)
+		fichero[i,19]<-round(fichero[i,17]/caida2)
+	}
+
+
+
+
+	 if (is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+	 }else if (fichero[i,21]>=0&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		fichero[i,22]<-round(fichero[i,20]/caida1)
+		fichero[i,23]<-round(fichero[i,21]/caida1)
+		fichero[i,24]<-round(fichero[i,22]/caida2)
+		fichero[i,25]<-round(fichero[i,23]/caida2)
+	} else if (is.na(fichero[i,21])&fichero[i,23]>=0&is.na(fichero[i,25])){
+		fichero[i,20]<-fichero[i,22]*caida1
+		fichero[i,21]<-fichero[i,23]*caida1
+		fichero[i,24]<-round(fichero[i,22]/caida2)
+		fichero[i,25]<-round(fichero[i,23]/caida2)
+	} else if (is.na(fichero[i,21])&is.na(fichero[i,23])&fichero[i,25]>=0){
+		fichero[i,20]<-fichero[i,24]*(caida1*2)
+		fichero[i,21]<-fichero[i,25]*(caida1*2)
+		fichero[i,22]<-fichero[i,24]*caida2
+		fichero[i,23]<-fichero[i,25]*caida2	
+	} else if (is.na(fichero[i,21])&fichero[i,23]>=0&fichero[i,25]>=0){
+		fichero[i,20]<-fichero[i,22]*caida1
+		fichero[i,21]<-fichero[i,23]*caida1
+	} else if (fichero[i,21]>=0&is.na(fichero[i,23])&fichero[i,25]>=0){
+		fichero[i,22]<-round(fichero[i,20]/caida1)
+		fichero[i,23]<-round(fichero[i,21]/caida1)
+	} else if (fichero[i,21]>=0&fichero[i,23]>=0&is.na(fichero[i,25])){
+		fichero[i,24]<-round(fichero[i,22]/caida2)
+		fichero[i,25]<-round(fichero[i,23]/caida2)
+	}
+
+
+
+
+	 if (is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+	 }else if (fichero[i,27]>=0&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		fichero[i,28]<-round(fichero[i,26]/caida1)
+		fichero[i,29]<-round(fichero[i,27]/caida1)
+		fichero[i,30]<-round(fichero[i,28]/caida2)
+		fichero[i,31]<-round(fichero[i,29]/caida2)
+	} else if (is.na(fichero[i,27])&fichero[i,29]>=0&is.na(fichero[i,31])){
+		fichero[i,26]<-fichero[i,28]*caida1
+		fichero[i,27]<-fichero[i,29]*caida1
+		fichero[i,30]<-round(fichero[i,28]/caida2)
+		fichero[i,31]<-round(fichero[i,29]/caida2)
+	} else if (is.na(fichero[i,27])&is.na(fichero[i,29])&fichero[i,31]>=0){
+		fichero[i,26]<-fichero[i,30]*(caida1*2)
+		fichero[i,27]<-fichero[i,31]*(caida1*2)
+		fichero[i,28]<-fichero[i,30]*caida2
+		fichero[i,29]<-fichero[i,31]*caida2	
+	} else if (is.na(fichero[i,27])&fichero[i,29]>=0&fichero[i,31]>=0){
+		fichero[i,26]<-fichero[i,28]*caida1
+		fichero[i,27]<-fichero[i,29]*caida1
+	} else if (fichero[i,27]>=0&is.na(fichero[i,29])&fichero[i,31]>=0){
+		fichero[i,28]<-round(fichero[i,26]/caida1)
+		fichero[i,29]<-round(fichero[i,27]/caida1)
+	} else if (fichero[i,27]>=0&fichero[i,29]>=0&is.na(fichero[i,31])){
+		fichero[i,30]<-round(fichero[i,28]/caida2)
+		fichero[i,31]<-round(fichero[i,29]/caida2)
+	}
+
+	
+	
+	if (is.na(fichero[i,2])&is.na(fichero[i,3])){
+		co1[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,2]>0&(fichero[i,2]>fichero[i,3])){
+		co1[i]<-(fichero[i,3]/fichero[i,2])
+			if (co1[i]<0.3&fichero[i,2]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,2]==fichero[i,3]&fichero[i,2]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co1[i]<-1
+	}else{
+		co1[i]<-0
+	}
+	if (is.na(fichero[i,4])&is.na(fichero[i,5])){
+		co2[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,4]>0&(fichero[i,4]>fichero[i,5])){
+		co2[i]<-(fichero[i,5]/fichero[i,4])
+			if (co2[i]<0.3&fichero[i,4]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,4]==fichero[i,5]&fichero[i,4]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co2[i]<-1
+	}else{
+		co2[i]<-0
+	}
+	if (is.na(fichero[i,6])&is.na(fichero[i,7])){
+		co3[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,6]>0&(fichero[i,6]>fichero[i,7])){
+		co3[i]<-(fichero[i,7]/fichero[i,6])
+			if (co3[i]<0.3&fichero[i,6]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,6]==fichero[i,7]&fichero[i,6]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co3[i]<-1
+	}else{
+		co3[i]<-0
+	}
+	if (is.na(fichero[i,8])&is.na(fichero[i,9])){
+		co4[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,8]>0&(fichero[i,8]>fichero[i,9])){
+		co4[i]<-(fichero[i,9]/fichero[i,8])
+			if (co4[i]<0.3&fichero[i,8]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,8]==fichero[i,9]&fichero[i,8]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co4[i]<-1
+	}else{
+		co4[i]<-0
+	}
+	if (is.na(fichero[i,10])&is.na(fichero[i,11])){
+		co5[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,10]>0&(fichero[i,10]>fichero[i,11])){
+		co5[i]<-(fichero[i,11]/fichero[i,10])
+			if (co5[i]<0.3&fichero[i,10]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,10]==fichero[i,11]&fichero[i,10]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co5[i]<-1
+	}else{
+		co5[i]<-0
+	}
+	if (is.na(fichero[i,12])&is.na(fichero[i,13])){
+		co6[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,12]>0&(fichero[i,12]>fichero[i,13])){
+		co6[i]<-(fichero[i,13]/fichero[i,12])
+			if (co6[i]<0.3&fichero[i,12]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,12]==fichero[i,13]&fichero[i,12]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co6[i]<-1
+	}else{
+		co6[i]<-0
+	}
+	if (is.na(fichero[i,14])&is.na(fichero[i,15])){
+		co7[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,14]>0&(fichero[i,14]>fichero[i,15])){
+		co7[i]<-(fichero[i,15]/fichero[i,14])
+			if (co7[i]<0.3&fichero[i,14]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,14]==fichero[i,15]&fichero[i,14]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co7[i]<-1
+	}else{
+		co7[i]<-0
+	}
+	if (is.na(fichero[i,16])&is.na(fichero[i,17])){
+		co8[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,16]>0&(fichero[i,16]>fichero[i,17])){
+		co8[i]<-(fichero[i,17]/fichero[i,16])
+			if (co8[i]<0.3&fichero[i,16]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,16]==fichero[i,17]&fichero[i,16]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co8[i]<-1
+	}else{
+		co8[i]<-0
+	}
+	if (is.na(fichero[i,18])&is.na(fichero[i,19])){
+		co9[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,18]>0&(fichero[i,18]>fichero[i,19])){
+		co9[i]<-(fichero[i,19]/fichero[i,18])
+			if (co9[i]<0.3&fichero[i,18]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,18]==fichero[i,19]&fichero[i,18]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co9[i]<-1
+	}else{
+		co9[i]<-0
+	}
+	if (is.na(fichero[i,20])&is.na(fichero[i,21])){
+		co10[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,20]>0&(fichero[i,20]>fichero[i,21])){
+		co10[i]<-(fichero[i,21]/fichero[i,20])
+			if (co10[i]<0.3&fichero[i,20]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,20]==fichero[i,21]&fichero[i,20]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co10[i]<-1
+	}else{
+		co10[i]<-0
+	}
+	if (is.na(fichero[i,22])&is.na(fichero[i,23])){
+		co11[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,22]>0&(fichero[i,22]>fichero[i,23])){
+		co11[i]<-(fichero[i,23]/fichero[i,22])
+			if (co11[i]<0.3&fichero[i,22]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,22]==fichero[i,23]&fichero[i,22]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co11[i]<-1
+	}else{
+		co11[i]<-0
+	}
+	if (is.na(fichero[i,24])&is.na(fichero[i,25])){
+		co12[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,24]>0&(fichero[i,24]>fichero[i,25])){
+		co12[i]<-(fichero[i,25]/fichero[i,24])
+			if (co12[i]<0.3&fichero[i,24]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,24]==fichero[i,25]&fichero[i,24]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co12[i]<-1
+	}else{
+		co12[i]<-0
+	}
+	if (is.na(fichero[i,26])&is.na(fichero[i,27])){
+		co13[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,26]>0&(fichero[i,26]>fichero[i,27])){
+		co13[i]<-(fichero[i,27]/fichero[i,26])
+			if (co13[i]<0.3&fichero[i,26]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,26]==fichero[i,27]&fichero[i,26]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co13[i]<-1
+	}else{
+		co13[i]<-0
+	}
+	if (is.na(fichero[i,28])&is.na(fichero[i,29])){
+		co14[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,28]>0&(fichero[i,28]>fichero[i,29])){
+		co14[i]<-(fichero[i,29]/fichero[i,28])
+			if (co14[i]<0.3&fichero[i,28]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,28]==fichero[i,29]&fichero[i,28]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co14[i]<-1
+	}else{
+		co14[i]<-0
+	}
+	if (is.na(fichero[i,30])&is.na(fichero[i,31])){
+		co15[i]<-0
+		if (alfa>(-z/2)){
+			alfa<-alfa-epsilon
+			}
+	}else if (fichero[i,30]>0&(fichero[i,30]>fichero[i,31])){
+		co15[i]<-(fichero[i,31]/fichero[i,30])
+			if (co15[i]<0.3&fichero[i,30]>2&alfa>(-z/2)){
+				alfa<-alfa-beta
+			}
+	}else if (fichero[i,30]==fichero[i,31]&fichero[i,30]>0&alfa<((1-z)/2)){
+		alfa<-alfa+gamma
+		co15[i]<-1
+	}else{
+		co15[i]<-0
+	}
+
+	
+
+	if (fichero[i,1]%in%excluir|(cont<=0&cont1<=5)){
+		pes[i]<-0
+		cotas1<-0
+		cotis1<-0
+		cotas2<-0
+		cotis2<-0
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6]))&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes1[i]<-(co1[i]+co2[i]+co3[i])	
+		pes[i]<-pes1[i]
+		cotas1<-fichero[i,2]
+		cotas2<-fichero[i,4]
+		cotis1<-0
+		cotis2<-0
+	}else if ((!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes2[i]<-(co4[i]+co5[i]+co6[i])
+		pes[i]<-pes2[i]
+		cotas1<-fichero[i,8]
+		cotas2<-fichero[i,10]
+		cotis1<-0
+		cotis2<-0
+	}else if ((!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes3[i]<-(co7[i]+co8[i]+co9[i])
+		pes[i]<-pes3[i]
+		cotas1<-fichero[i,14]
+		cotas2<-fichero[i,16]
+		cotis1<-0
+		cotis2<-0
+	}else if ((!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes4[i]<-(co10[i]+co11[i]+co12[i])
+		pes[i]<-pes4[i]
+		cotas1<-fichero[i,20]
+		cotas2<-fichero[i,22]
+		cotis1<-0
+		cotis2<-0
+	}else if ((!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		pes5[i]<-(co13[i]+co14[i]+co15[i])
+		pes[i]<-pes5[i]
+		cotas1<-fichero[i,26]
+		cotas2<-fichero[i,28]
+		cotis1<-0
+		cotis2<-0
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12]))&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes[i]<-(pes1[i]+pes2[i])/(pesos[1]+pesos[2])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,8]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,10]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,9]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,11]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18]))&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes[i]<-(pes1[i]+pes3[i])/(pesos[1]+pesos[3])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,14]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,16]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,15]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,17]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24]))&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes[i]<-(pes1[i]+pes4[i])/(pesos[1]+pesos[4])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,20]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,22]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,21]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,23]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes1[i]+pes5[i])/(pesos[1]+pesos[5])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes[i]<-(pes2[i]+pes3[i])/(pesos[2]+pesos[3])
+		cotas1<-quantile(c(fichero[i,8],fichero[i,14]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,10],fichero[i,16]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,9],fichero[i,15]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,11],fichero[i,17]),probs=c(b))
+	}else if ((!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes[i]<-(pes2[i]+pes4[i])/(pesos[2]+pesos[4])
+		cotas1<-quantile(c(fichero[i,8],fichero[i,20]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,10],fichero[i,22]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,9],fichero[i,21]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,11],fichero[i,23]),probs=c(b))
+	}else if ((!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes2[i]+pes5[i])/(pesos[2]+pesos[5])
+		cotas1<-quantile(c(fichero[i,8],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,10],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,9],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,11],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes[i]<-(pes3[i]+pes4[i])/(pesos[3]+pesos[4])
+		cotas1<-quantile(c(fichero[i,14],fichero[i,20]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,16],fichero[i,22]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,15],fichero[i,21]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,17],fichero[i,23]),probs=c(b))
+	}else if ((!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes3[i]+pes5[i])/(pesos[3]+pesos[5])
+		cotas1<-quantile(c(fichero[i,14],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,16],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,15],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,17],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])){
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes4[i]+pes5[i])/(pesos[4]+pesos[5])
+		cotas1<-quantile(c(fichero[i,20],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,22],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,21],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,23],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18]))&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes[i]<-(pes1[i]+pes2[i]+pes3[i])/(pesos[1]+pesos[2]+pesos[3])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,8],fichero[i,14]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,10],fichero[i,16]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,9],fichero[i,15]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,11],fichero[i,17]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24]))&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes[i]<-(pes1[i]+pes2[i]+pes4[i])/(pesos[1]+pesos[2]+pesos[4])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,8],fichero[i,20]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,10],fichero[i,22]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,9],fichero[i,21]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,11],fichero[i,23]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes1[i]+pes2[i]+pes5[i])/(pesos[1]+pesos[2]+pesos[5])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,8],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,10],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,9],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,11],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24]))&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes[i]<-(pes1[i]+pes3[i]+pes4[i])/(pesos[1]+pesos[3]+pesos[4])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,14],fichero[i,20]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,16],fichero[i,22]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,15],fichero[i,21]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,17],fichero[i,23]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes1[i]+pes3[i]+pes5[i])/(pesos[1]+pesos[3]+pesos[5])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,14],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,16],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,15],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,17],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes[i]<-(pes2[i]+pes3[i]+pes4[i])/(pesos[2]+pesos[3]+pesos[4])
+		cotas1<-quantile(c(fichero[i,8],fichero[i,14],fichero[i,20]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,10],fichero[i,16],fichero[i,22]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,9],fichero[i,15],fichero[i,21]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,11],fichero[i,17],fichero[i,23]),probs=c(b))
+	}else if ((!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes2[i]+pes3[i]+pes5[i])/(pesos[2]+pesos[3]+pesos[5])
+		cotas1<-quantile(c(fichero[i,8],fichero[i,14],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,10],fichero[i,16],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,9],fichero[i,15],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,11],fichero[i,17],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes1[i]+pes4[i]+pes5[i])/(pesos[1]+pesos[4]+pesos[5])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,20],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,22],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,21],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,23],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])){
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes2[i]+pes4[i]+pes5[i])/(pesos[2]+pesos[4]+pesos[5])
+		cotas1<-quantile(c(fichero[i,8],fichero[i,20],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,10],fichero[i,22],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,9],fichero[i,21],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,11],fichero[i,23],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])){
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes3[i]+pes4[i]+pes5[i])/(pesos[3]+pesos[4]+pesos[5])
+		cotas1<-quantile(c(fichero[i,14],fichero[i,20],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,16],fichero[i,22],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,15],fichero[i,21],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,17],fichero[i,23],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24]))&is.na(fichero[i,27])&is.na(fichero[i,29])&is.na(fichero[i,31])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes[i]<-(pes1[i]+pes2[i]+pes3[i]+pes4[i])/(pesos[1]+pesos[2]+pesos[3]+pesos[4])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,8],fichero[i,14],fichero[i,20]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,10],fichero[i,16],fichero[i,22]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,9],fichero[i,15],fichero[i,21]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,11],fichero[i,17],fichero[i,23]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,21])&is.na(fichero[i,23])&is.na(fichero[i,25])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes1[i]+pes2[i]+pes3[i]+pes5[i])/(pesos[1]+pesos[2]+pesos[3]+pesos[5])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,8],fichero[i,14],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,10],fichero[i,16],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,9],fichero[i,15],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,11],fichero[i,17],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,9])&is.na(fichero[i,11])&is.na(fichero[i,13])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes1[i]+pes3[i]+pes4[i]+pes5[i])/(pesos[1]+pesos[3]+pesos[4]+pesos[5])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,14],fichero[i,20],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,16],fichero[i,22],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,15],fichero[i,21],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,17],fichero[i,23],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,14])&!is.na(fichero[i,16])&!is.na(fichero[i,18])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,3])&is.na(fichero[i,5])&is.na(fichero[i,7])){
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes2[i]+pes3[i]+pes4[i]+pes5[i])/(pesos[2]+pesos[3]+pesos[4]+pesos[5])
+		cotas1<-quantile(c(fichero[i,8],fichero[i,14],fichero[i,20],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,10],fichero[i,16],fichero[i,22],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,9],fichero[i,15],fichero[i,21],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,11],fichero[i,17],fichero[i,23],fichero[i,29]),probs=c(b))
+	}else if ((!is.na(fichero[i,2])&!is.na(fichero[i,4])&!is.na(fichero[i,6])&!is.na(fichero[i,8])&!is.na(fichero[i,10])&!is.na(fichero[i,12])&!is.na(fichero[i,20])&!is.na(fichero[i,22])&!is.na(fichero[i,24])&!is.na(fichero[i,26])&!is.na(fichero[i,28])&!is.na(fichero[i,30]))&is.na(fichero[i,15])&is.na(fichero[i,17])&is.na(fichero[i,19])){
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-(pes1[i]+pes2[i]+pes4[i]+pes5[i])/(pesos[1]+pesos[2]+pesos[4]+pesos[5])
+		cotas1<-quantile(c(fichero[i,2],fichero[i,8],fichero[i,20],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,10],fichero[i,22],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,9],fichero[i,21],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,11],fichero[i,23],fichero[i,29]),probs=c(b))
+	}else if (is.na(fichero[i,2])&is.na(fichero[i,3])&is.na(fichero[i,4])&is.na(fichero[i,5])&is.na(fichero[i,8])&is.na(fichero[i,9])&is.na(fichero[i,10])&is.na(fichero[i,11])&is.na(fichero[i,14])&is.na(fichero[i,15])&is.na(fichero[i,16])&is.na(fichero[i,17])&is.na(fichero[i,20])&is.na(fichero[i,21])&is.na(fichero[i,22])&is.na(fichero[i,23])&is.na(fichero[i,26])&is.na(fichero[i,27])&is.na(fichero[i,28])&is.na(fichero[i,29])){
+		pes[i]<-0
+		cotas1<-0
+		cotis1<-0
+		cotas2<-0
+		cotis2<-0
+	}else{
+		pes1[i]<-pesos[1]*(co1[i]+co2[i]+co3[i])
+		pes2[i]<-pesos[2]*(co4[i]+co5[i]+co6[i])
+		pes3[i]<-pesos[3]*(co7[i]+co8[i]+co9[i])
+		pes4[i]<-pesos[4]*(co10[i]+co11[i]+co12[i])
+		pes5[i]<-pesos[5]*(co13[i]+co14[i]+co15[i])
+		pes[i]<-pes1[i]+pes2[i]+pes3[i]+pes4[i]+pes5[i]
+		cotas1<-quantile(c(fichero[i,2],fichero[i,8],fichero[i,14],fichero[i,20],fichero[i,26]),probs=c(z+alfa))
+		cotas2<-quantile(c(fichero[i,4],fichero[i,10],fichero[i,16],fichero[i,22],fichero[i,28]),probs=c(x+alfa))
+		cotis1<-quantile(c(fichero[i,3],fichero[i,9],fichero[i,15],fichero[i,21],fichero[i,27]),probs=c(v))
+		cotis2<-quantile(c(fichero[i,5],fichero[i,11],fichero[i,17],fichero[i,23],fichero[i,29]),probs=c(b))
+	}
+	cotasup1[i]<-as.integer(cotas1)
+	cotainf1[i]<-as.integer(cotis1)
+	cotasup2[i]<-as.integer(cotas2)
+	cotainf2[i]<-as.integer(cotis2)
+}
+
+
+##minim<-function(x) abs(x-marche1)+(x*varmar1)
+w<-rep(1,nrow(fichero))
+W1<-23000
+W2<-11500
+##W1<-16000
+##W2<-7500
+
+
+	constraints<-L_constraint(w,"<=",W1)
+	copt<-OP(objective=pes,constraints=constraints,bounds = V_bound(ub = cotasup1, lb = cotainf1),types=rep("I",nrow(fichero)),maximum=TRUE)
+	res <- ROI_solve(copt, "glpk", verbose = TRUE)
+	s1<-ROI::solution(res)
+
+	constraints<-L_constraint(w,"<=",W2)
+	copt<-OP(objective=pes,constraints=constraints,bounds = V_bound(ub = cotasup2, lb = cotainf2),types=rep("I",nrow(fichero)),maximum=TRUE)
+	res <- ROI_solve(copt, "glpk", verbose = TRUE)
+	s2<-ROI::solution(res)
+
+
+
+for (i in 1:length(s1)){
+	if (s1[i]==0&s2[i]>0){
+		s1[i]<-1
+		s2[i]<-1
+	}else if (s1[i]<s2[i]){
+		s2[i]<-s1[i]
+	}else if (s2[i]==0&s1[i]>0){
+		s2[i]<-1
+	}
+}
+
+
+Reparto<-data.frame(fichero[,1],s1,s2)
+colnames(Reparto)<-c("NIM","REPARTO 1","REPARTO 2")
+
+	
+
+
+##test1<-sum(fichero[,26]-fichero[,27])
+##test1simu<-sum(s-fichero[,27])
+
+
+
+write.xlsx(Reparto,"FICHERO",sheetName="Sheet1")
+
+
+##PARA LA COMPARACIÓN, ESCOGER PUNTOS DONDE EL REPARTO DE JC NO COINCIDA CON EL FOURNI DE SP3; EXCLUIR PUNTOS DONDE SE ENTREGUE CANTIDAD SEGÚN LA SIMULACIÓN Y NO SE ENTREGUE SEGÚN EL REPARTO DE JC
+
+##Sum of issue 2 and 3 for all reference collections less or equal than 1, I exclude. Simulate 18000 and 16000.
